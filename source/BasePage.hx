@@ -14,6 +14,7 @@ import flixel.system.scaleModes.RatioScaleMode;
 import flixel.util.FlxSpriteUtil;
 import substates.NewProj;
 import substates.EditProj;
+import substates.NewSheet;
 import tjson.TJSON;
 
 /**
@@ -110,13 +111,13 @@ class BasePage extends FlxUIState
 		var proj:FlxUIDropDownMenu = new FlxUIDropDownMenu(0, 0, opt, projCall);
 		hud.add(proj);
 		
-		var opt2:Array<StrIdLabel> = Reg.makeStrIdArray(["New sheet", "Open sheet", "Save sheet", "Close sheet"]);
+		var opt2:Array<StrIdLabel> = Reg.makeStrIdArray(["Open image", "Close image"]);
 		var proj2:FlxUIDropDownMenu = new FlxUIDropDownMenu(proj.width, 0, opt2, imgCall);
 		hud.add(proj2);
 		
-		//var opt3:Array<StrIdLabel> = Reg.makeStrIdArray(["New sheet", "Open sheet", "Save sheet", "Close sheet"]);
-		//var proj3:FlxUIDropDownMenu = new FlxUIDropDownMenu(proj.width + proj2.width, 0, opt3);
-		//hud.add(proj3);
+		var opt3:Array<StrIdLabel> = Reg.makeStrIdArray(["New sheet", "Open sheet", "Save sheet", "Close sheet"]);
+		var proj3:FlxUIDropDownMenu = new FlxUIDropDownMenu(proj.width + proj2.width, 0, opt3, sheetCall);
+		hud.add(proj3);
 		
 		fieldlist = new FlxUIList(0, 80, null, FlxG.width / 4, (FlxG.height - 80) * 0.75);
 		fieldlist.x = FlxG.width - fieldlist.width;
@@ -142,10 +143,22 @@ class BasePage extends FlxUIState
 	{
 		switch (S)
 		{
-			case "New sheet":
-				//new ImgHandler();
+			case "Open image":
+				new ImgHandler();
 				
 			case "Close image":
+				
+		}
+	}
+	
+	private function sheetCall(S:String):Void
+	{
+		switch (S)
+		{
+			case "New sheet":
+				openSubState(new NewSheet());
+				
+			case "Open sheet":
 				
 		}
 	}
@@ -164,6 +177,7 @@ class BasePage extends FlxUIState
 				var t:String = Reflect.field(x, "type");
 				
 				Reg.proj.push(new ProjField(n, t));
+				trace(n, t);
 				makeNewPropAssets(n, t);
 			}
 		}

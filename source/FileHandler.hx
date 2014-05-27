@@ -20,6 +20,14 @@ class FileHandler
 		ref.save("", Name + ".tset");
 	}
 	
+	static public function newSheet(Name:String, TileWidth:String, TileHeight:String):Void
+	{
+		var ref:FileReference = new FileReference();
+		var arr:Array<Dynamic> = [];
+		arr.push([Name, TileWidth, TileHeight]);
+		ref.save(TJSON.encode(arr), Name + ".json");
+	}
+	
 	static public function openProj(FileRef:FileReference, Callback:String->Void):Void
 	{
 		call = Callback;

@@ -30,6 +30,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 	public static var path (default, null) = new Map <String, String> ();
 	public static var type (default, null) = new Map <String, AssetType> ();
 	
+	
 	public function new () {
 		
 		super ();
@@ -149,173 +150,51 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		#else
 		
-		#if (windows || mac || linux)
-		
-		var loadManifest = false;
-		
-		className.set ("assets/data/data-goes-here.txt", __ASSET__assets_data_data_goes_here_txt);
-		type.set ("assets/data/data-goes-here.txt", Reflect.field (AssetType, "text".toUpperCase ()));
-		
-		className.set ("assets/images/images-go-here.txt", __ASSET__assets_images_images_go_here_txt);
-		type.set ("assets/images/images-go-here.txt", Reflect.field (AssetType, "text".toUpperCase ()));
-		
-		className.set ("assets/music/music-goes-here.txt", __ASSET__assets_music_music_goes_here_txt);
-		type.set ("assets/music/music-goes-here.txt", Reflect.field (AssetType, "text".toUpperCase ()));
-		
-		className.set ("assets/sounds/sounds-go-here.txt", __ASSET__assets_sounds_sounds_go_here_txt);
-		type.set ("assets/sounds/sounds-go-here.txt", Reflect.field (AssetType, "text".toUpperCase ()));
-		
-		className.set ("assets/sounds/beep.mp3", __ASSET__assets_sounds_beep_mp3);
-		type.set ("assets/sounds/beep.mp3", Reflect.field (AssetType, "music".toUpperCase ()));
-		
-		className.set ("assets/sounds/flixel.mp3", __ASSET__assets_sounds_flixel_mp3);
-		type.set ("assets/sounds/flixel.mp3", Reflect.field (AssetType, "music".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/box.png", __ASSET__flixel_flixel_ui_img_box_png);
-		type.set ("flixel/flixel-ui/img/box.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/button.png", __ASSET__flixel_flixel_ui_img_button_png);
-		type.set ("flixel/flixel-ui/img/button.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/button_arrow_down.png", __ASSET__flixel_flixel_ui_img_button_arrow_down_png);
-		type.set ("flixel/flixel-ui/img/button_arrow_down.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/button_arrow_left.png", __ASSET__flixel_flixel_ui_img_button_arrow_left_png);
-		type.set ("flixel/flixel-ui/img/button_arrow_left.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/button_arrow_right.png", __ASSET__flixel_flixel_ui_img_button_arrow_right_png);
-		type.set ("flixel/flixel-ui/img/button_arrow_right.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/button_arrow_up.png", __ASSET__flixel_flixel_ui_img_button_arrow_up_png);
-		type.set ("flixel/flixel-ui/img/button_arrow_up.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/button_thin.png", __ASSET__flixel_flixel_ui_img_button_thin_png);
-		type.set ("flixel/flixel-ui/img/button_thin.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/button_toggle.png", __ASSET__flixel_flixel_ui_img_button_toggle_png);
-		type.set ("flixel/flixel-ui/img/button_toggle.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/check_box.png", __ASSET__flixel_flixel_ui_img_check_box_png);
-		type.set ("flixel/flixel-ui/img/check_box.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/check_mark.png", __ASSET__flixel_flixel_ui_img_check_mark_png);
-		type.set ("flixel/flixel-ui/img/check_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/chrome.png", __ASSET__flixel_flixel_ui_img_chrome_png);
-		type.set ("flixel/flixel-ui/img/chrome.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/chrome_flat.png", __ASSET__flixel_flixel_ui_img_chrome_flat_png);
-		type.set ("flixel/flixel-ui/img/chrome_flat.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/chrome_inset.png", __ASSET__flixel_flixel_ui_img_chrome_inset_png);
-		type.set ("flixel/flixel-ui/img/chrome_inset.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/chrome_light.png", __ASSET__flixel_flixel_ui_img_chrome_light_png);
-		type.set ("flixel/flixel-ui/img/chrome_light.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/dropdown_mark.png", __ASSET__flixel_flixel_ui_img_dropdown_mark_png);
-		type.set ("flixel/flixel-ui/img/dropdown_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/finger_big.png", __ASSET__flixel_flixel_ui_img_finger_big_png);
-		type.set ("flixel/flixel-ui/img/finger_big.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/finger_small.png", __ASSET__flixel_flixel_ui_img_finger_small_png);
-		type.set ("flixel/flixel-ui/img/finger_small.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/hilight.png", __ASSET__flixel_flixel_ui_img_hilight_png);
-		type.set ("flixel/flixel-ui/img/hilight.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/invis.png", __ASSET__flixel_flixel_ui_img_invis_png);
-		type.set ("flixel/flixel-ui/img/invis.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/minus_mark.png", __ASSET__flixel_flixel_ui_img_minus_mark_png);
-		type.set ("flixel/flixel-ui/img/minus_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/plus_mark.png", __ASSET__flixel_flixel_ui_img_plus_mark_png);
-		type.set ("flixel/flixel-ui/img/plus_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/radio.png", __ASSET__flixel_flixel_ui_img_radio_png);
-		type.set ("flixel/flixel-ui/img/radio.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/radio_dot.png", __ASSET__flixel_flixel_ui_img_radio_dot_png);
-		type.set ("flixel/flixel-ui/img/radio_dot.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/swatch.png", __ASSET__flixel_flixel_ui_img_swatch_png);
-		type.set ("flixel/flixel-ui/img/swatch.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/tab.png", __ASSET__flixel_flixel_ui_img_tab_png);
-		type.set ("flixel/flixel-ui/img/tab.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/img/tab_back.png", __ASSET__flixel_flixel_ui_img_tab_back_png);
-		type.set ("flixel/flixel-ui/img/tab_back.png", Reflect.field (AssetType, "image".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/xml/defaults.xml", __ASSET__flixel_flixel_ui_xml_defaults_xml);
-		type.set ("flixel/flixel-ui/xml/defaults.xml", Reflect.field (AssetType, "text".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/xml/default_loading_screen.xml", __ASSET__flixel_flixel_ui_xml_default_loading_screen_xml);
-		type.set ("flixel/flixel-ui/xml/default_loading_screen.xml", Reflect.field (AssetType, "text".toUpperCase ()));
-		
-		className.set ("flixel/flixel-ui/xml/default_popup.xml", __ASSET__flixel_flixel_ui_xml_default_popup_xml);
-		type.set ("flixel/flixel-ui/xml/default_popup.xml", Reflect.field (AssetType, "text".toUpperCase ()));
-		
-		
-		#else
-		
-		var loadManifest = true;
-		
-		#end
-		
-		if (loadManifest) {
-			try {
+		try {
+			
+			#if blackberry
+			var bytes = ByteArray.readFile ("app/native/manifest");
+			#elseif tizen
+			var bytes = ByteArray.readFile ("../res/manifest");
+			#elseif emscripten
+			var bytes = ByteArray.readFile ("assets/manifest");
+			#else
+			var bytes = ByteArray.readFile ("manifest");
+			#end
+			
+			if (bytes != null) {
 				
-				#if blackberry
-				var bytes = ByteArray.readFile ("app/native/manifest");
-				#elseif tizen
-				var bytes = ByteArray.readFile ("../res/manifest");
-				#elseif emscripten
-				var bytes = ByteArray.readFile ("assets/manifest");
-				#else
-				var bytes = ByteArray.readFile ("manifest");
-				#end
+				bytes.position = 0;
 				
-				if (bytes != null) {
+				if (bytes.length > 0) {
 					
-					bytes.position = 0;
+					var data = bytes.readUTFBytes (bytes.length);
 					
-					if (bytes.length > 0) {
+					if (data != null && data.length > 0) {
 						
-						var data = bytes.readUTFBytes (bytes.length);
+						var manifest:Array<AssetData> = Unserializer.run (data);
 						
-						if (data != null && data.length > 0) {
+						for (asset in manifest) {
 							
-							var manifest:Array<AssetData> = Unserializer.run (data);
+							path.set (asset.id, asset.path);
+							type.set (asset.id, asset.type);
 							
-							for (asset in manifest) {
-								
-								if (!className.exists(asset.id)) {
-									
-									path.set (asset.id, asset.path);
-									type.set (asset.id, asset.type);
-									
-								}
-							}
-						
 						}
-					
+						
 					}
-				
-				} else {
-				
-					trace ("Warning: Could not load asset manifest");
-				
+					
 				}
-			
-			} catch (e:Dynamic) {
-			
+				
+			} else {
+				
 				trace ("Warning: Could not load asset manifest");
-			
+				
 			}
-		
+			
+		} catch (e:Dynamic) {
+			
+			trace ("Warning: Could not load asset manifest");
+			
 		}
 		
 		#end
@@ -398,7 +277,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		return BitmapData.fromImage (path.get (id));
 		
-		#elseif (flash)
+		#elseif flash
 		
 		return cast (Type.createInstance (className.get (id), []), BitmapData);
 		
@@ -412,8 +291,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		#else
 		
-		if (className.exists(id)) return cast (Type.createInstance (className.get (id), []), BitmapData);
-		else return BitmapData.load (path.get (id));
+		return BitmapData.load (path.get (id));
 		
 		#end
 		
@@ -426,7 +304,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		return null;
 		
-		#elseif (flash)
+		#elseif flash
 		
 		return cast (Type.createInstance (className.get (id), []), ByteArray);
 		
@@ -466,8 +344,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		#else
 		
-		if (className.exists(id)) return cast (Type.createInstance (className.get (id), []), ByteArray);
-		else return ByteArray.readFile (path.get (id));
+		return ByteArray.readFile (path.get (id));
 		
 		#end
 		
@@ -486,11 +363,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		#else
 		
-		if (className.exists(id)) {
-			var fontClass = className.get(id);
-			Font.registerFont(fontClass);
-			return cast (Type.createInstance (fontClass, []), Font);
-		} else return new Font (path.get (id));
+		return new Font (path.get (id));
 		
 		#end
 		
@@ -503,7 +376,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		return null;
 		
-		#elseif (flash)
+		#elseif flash
 		
 		return cast (Type.createInstance (className.get (id), []), Sound);
 		
@@ -520,8 +393,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		#else
 		
-		if (className.exists(id)) return cast (Type.createInstance (className.get (id), []), Sound);
-		else return new Sound (new URLRequest (path.get (id)), null, true);
+		return new Sound (new URLRequest (path.get (id)), null, true);
 		
 		#end
 		
@@ -549,7 +421,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		return null;
 		
-		#elseif (flash)
+		#elseif flash
 		
 		return cast (Type.createInstance (className.get (id), []), Sound);
 		
@@ -559,8 +431,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		#else
 		
-		if (className.exists(id)) return cast (Type.createInstance (className.get (id), []), Sound);
-		else return new Sound (new URLRequest (path.get (id)), null, type.get (id) == MUSIC);
+		return new Sound (new URLRequest (path.get (id)), null, type.get (id) == MUSIC);
 		
 		#end
 		
@@ -587,7 +458,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 			bytes = null;
 			
 		}
-		
+
 		if (bytes != null) {
 			
 			bytes.position = 0;
@@ -914,46 +785,6 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
-
-
-#elseif (windows || mac || linux)
-
-
-@:file("assets/data/data-goes-here.txt") class __ASSET__assets_data_data_goes_here_txt extends flash.utils.ByteArray {}
-@:file("assets/images/images-go-here.txt") class __ASSET__assets_images_images_go_here_txt extends flash.utils.ByteArray {}
-@:file("assets/music/music-goes-here.txt") class __ASSET__assets_music_music_goes_here_txt extends flash.utils.ByteArray {}
-@:file("assets/sounds/sounds-go-here.txt") class __ASSET__assets_sounds_sounds_go_here_txt extends flash.utils.ByteArray {}
-@:sound("C:/HaxeToolkit/haxe/lib/flixel/3,3,3/assets/sounds/beep.mp3") class __ASSET__assets_sounds_beep_mp3 extends flash.media.Sound {}
-@:sound("C:/HaxeToolkit/haxe/lib/flixel/3,3,3/assets/sounds/flixel.mp3") class __ASSET__assets_sounds_flixel_mp3 extends flash.media.Sound {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/box.png") class __ASSET__flixel_flixel_ui_img_box_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/button.png") class __ASSET__flixel_flixel_ui_img_button_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/button_arrow_down.png") class __ASSET__flixel_flixel_ui_img_button_arrow_down_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/button_arrow_left.png") class __ASSET__flixel_flixel_ui_img_button_arrow_left_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/button_arrow_right.png") class __ASSET__flixel_flixel_ui_img_button_arrow_right_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/button_arrow_up.png") class __ASSET__flixel_flixel_ui_img_button_arrow_up_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/button_thin.png") class __ASSET__flixel_flixel_ui_img_button_thin_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/button_toggle.png") class __ASSET__flixel_flixel_ui_img_button_toggle_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/check_box.png") class __ASSET__flixel_flixel_ui_img_check_box_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/check_mark.png") class __ASSET__flixel_flixel_ui_img_check_mark_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/chrome.png") class __ASSET__flixel_flixel_ui_img_chrome_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/chrome_flat.png") class __ASSET__flixel_flixel_ui_img_chrome_flat_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/chrome_inset.png") class __ASSET__flixel_flixel_ui_img_chrome_inset_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/chrome_light.png") class __ASSET__flixel_flixel_ui_img_chrome_light_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/dropdown_mark.png") class __ASSET__flixel_flixel_ui_img_dropdown_mark_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/finger_big.png") class __ASSET__flixel_flixel_ui_img_finger_big_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/finger_small.png") class __ASSET__flixel_flixel_ui_img_finger_small_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/hilight.png") class __ASSET__flixel_flixel_ui_img_hilight_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/invis.png") class __ASSET__flixel_flixel_ui_img_invis_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/minus_mark.png") class __ASSET__flixel_flixel_ui_img_minus_mark_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/plus_mark.png") class __ASSET__flixel_flixel_ui_img_plus_mark_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/radio.png") class __ASSET__flixel_flixel_ui_img_radio_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/radio_dot.png") class __ASSET__flixel_flixel_ui_img_radio_dot_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/swatch.png") class __ASSET__flixel_flixel_ui_img_swatch_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/tab.png") class __ASSET__flixel_flixel_ui_img_tab_png extends flash.display.BitmapData {}
-@:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/tab_back.png") class __ASSET__flixel_flixel_ui_img_tab_back_png extends flash.display.BitmapData {}
-@:file("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/xml/defaults.xml") class __ASSET__flixel_flixel_ui_xml_defaults_xml extends flash.utils.ByteArray {}
-@:file("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/xml/default_loading_screen.xml") class __ASSET__flixel_flixel_ui_xml_default_loading_screen_xml extends flash.utils.ByteArray {}
-@:file("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/xml/default_popup.xml") class __ASSET__flixel_flixel_ui_xml_default_popup_xml extends flash.utils.ByteArray {}
 
 
 #end
