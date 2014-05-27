@@ -1,0 +1,22 @@
+-main ApplicationMain 
+-lib flixel
+-lib openfl
+-lib tjson
+-lib flixel-addons
+-lib flixel-ui
+-cp source
+-D FLX_NO_GAMEPAD
+-D tools=1.4.0
+-D FLX_NO_DEBUG
+-D FLX_NO_SOUND_SYSTEM
+-D NAPE_RELEASE_BUILD
+-D FLX_RENDER_BLIT
+-D FLX_NO_SOUND_TRAY
+-D web
+-swf-version 11.2
+-swf export/flash/bin/TileSetter.swf
+-swf-header 960:720:60:000000
+-cp export/flash/haxe
+#--remap nme:flash
+#--no-inline
+-debug
