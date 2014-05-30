@@ -1,21 +1,28 @@
 package ;
 import flash.net.FileReference;
+import flixel.addons.ui.FlxUI;
+import flixel.addons.ui.FlxUIAssets;
 import flixel.addons.ui.FlxUIButton;
+import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIGroup;
+import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUIList;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUIDropDownMenu;
+import flixel.addons.ui.FlxUITabMenu;
 import flixel.addons.ui.FlxUIText;
 import flixel.addons.ui.StrIdLabel;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.system.scaleModes.RatioScaleMode;
+import flixel.util.FlxRect;
 import flixel.util.FlxSpriteUtil;
+import haxe.Json;
+import substates.MessagePopup;
 import substates.NewProj;
 import substates.EditProj;
 import substates.NewSheet;
-import tjson.TJSON;
 
 /**
  * ...
@@ -30,13 +37,18 @@ class BasePage extends FlxUIState
 	
 	public var selector:Selector;
 	
+	public var tab:FlxUITabMenu;
+	public var tabRect:FlxRect;
 	public var fieldlist:FlxUIList;
+	public var fieldlist2:FlxUIList;
+	
+	private var show_inspect:Bool = false;
 	
 	override public function create() 
 	{
 		super.create();
 		Reg.base = this;
-		Reg.proj = new Array<ProjField>();
+		//Reg.proj = new Array<ProjField>();
 		
 		FlxG.scaleMode = new RatioScaleMode();
 		
@@ -49,6 +61,8 @@ class BasePage extends FlxUIState
 		under_hud.add(tileset);
 		
 		addHUD();
+		
+		Json.stringify(new Map<Int, Dynamic>());
 	}
 	
 	override public function update():Void 
@@ -79,22 +93,136 @@ class BasePage extends FlxUIState
 		{
 			FlxSpriteUtil.screenCenter(tileset, true, true);
 		}
-		if (FlxG.mouse.justPressed && FlxG.mouse.y > 21)
+		if (!tabRect.containsFlxPoint(FlxG.mouse.getScreenPosition()))
 		{
-			selector.setFirstAnchor(FlxG.mouse.x, FlxG.mouse.y, tileset);
+			if (FlxG.mouse.justPressed && FlxG.mouse.y > 21)
+			{
+				selector.setFirstAnchor(FlxG.mouse.x, FlxG.mouse.y, tileset);
+			}
+			if (FlxG.mouse.justReleased && FlxG.mouse.y > 21)
+			{
+				selector.setFinalAnchor(FlxG.mouse.x, FlxG.mouse.y, tileset);
+			}
+			if (FlxG.mouse.pressed && FlxG.mouse.y > 21)
+			{
+				selector.setMediumAnchor(FlxG.mouse.x, FlxG.mouse.y, tileset);
+			}
 		}
-		if (FlxG.mouse.justReleased && FlxG.mouse.y > 21)
+		
+		if (Reg.sheet != null)
 		{
-			selector.setFinalAnchor(FlxG.mouse.x, FlxG.mouse.y, tileset);
+			if (FlxG.keys.justPressed.E)
+			{
+				var arr:Array<Int> = selector.getSelected();
+				
+				var selected:Int = -1;
+				if (arr.length >= 1)
+				{
+					if (Reg.sheet.tiles.exists(arr[0]))
+					{
+						var to_compare:Int = Reg.sheet.tiles.get(arr[0]);
+						
+						for (x in arr)
+						{
+							if (Reg.sheet.tiles.exists(x))
+							{
+								var brush:Int = Reg.sheet.tiles.get(x);
+								
+								if (brush == to_compare)
+								{
+									selected = x;
+								}
+								
+								else
+								{
+									selected = -1;
+									break;
+								}
+							}
+							
+							else
+							{
+								selected = -1;
+								break;
+							}
+						}
+					}
+				}
+				
+				if (selected == -1)
+				{
+					show_inspect = false;
+				}
+				
+				else
+				{
+					show_inspect = true;
+					
+					var ind:Int = 0;
+					var brush:Brush = Reg.sheet.brushes.get(Reg.sheet.tiles.get(selected));
+					
+					for (field in Reg.proj.iterator())
+					{
+						if (field.type == "Checkbox")
+						{
+							var check:FlxUICheckBox = cast Reg.props_inspect.get(field.name);
+							
+							check.checked = brush.arr[ind];
+						}
+						
+						if (field.type == "Textfield")
+						{
+							var inp:FlxUIInputText = cast Reg.props_inspect.get(field.name);
+							
+							inp.text = brush.arr[ind];
+						}
+						
+						ind++;
+					}
+				}
+			}
+			
+			if (FlxG.keys.justPressed.Q)
+			{
+				var brush:Brush = new Brush();
+				
+				for (field in Reg.proj.iterator())
+				{
+					if (field.type == "Checkbox")
+					{
+						var check:FlxUICheckBox = cast Reg.props.get(field.name);
+						
+						brush.arr.push(check.checked);
+					}
+					
+					if (field.type == "Textfield")
+					{
+						var inp:FlxUIInputText = cast Reg.props.get(field.name);
+						
+						brush.arr.push(inp.text);
+					}
+					
+					Reg.sheet.brushes.set(Reg.sheet.index, brush);
+					
+					for (x in selector.getSelected())
+					{
+						Reg.sheet.tiles.set(x, Reg.sheet.index);
+					}
+				}
+				
+				Reg.sheet.index++;
+			}
 		}
-		if (FlxG.mouse.pressed && FlxG.mouse.y > 21)
+		
+		if (show_inspect)
 		{
-			selector.setMediumAnchor(FlxG.mouse.x, FlxG.mouse.y, tileset);
+			tab.getTabGroup("Inspect").visible = true;
 		}
-		//if (FlxG.keys.justPressed.R)
-		//{
-			//trace(selector.getSelected());
-		//}
+		
+		else
+		{
+			tab.getTabGroup("Inspect").visible = false;
+		}
 	}
 	
 	public function addHUD():Void
@@ -119,9 +247,33 @@ class BasePage extends FlxUIState
 		var proj3:FlxUIDropDownMenu = new FlxUIDropDownMenu(proj.width + proj2.width, 0, opt3, sheetCall);
 		hud.add(proj3);
 		
-		fieldlist = new FlxUIList(0, 80, null, FlxG.width / 4, (FlxG.height - 80) * 0.75);
+		var tabs = [{ id:"Inspect", label:"Inspect" },
+		{ id:"Apply", label:"Apply" }];
+		
+		tab = new FlxUITabMenu(null, tabs, true);
+		
+		tab.y = 21;
+		tab.width = FlxG.width * 0.30;
+		tab.x = FlxG.width - tab.width;
+		tabRect = new FlxRect(tab.x, tab.y, tab.width, tab.height);
+		
+		fieldlist = new FlxUIList(0, 0, null, FlxG.width / 4, (FlxG.height - 80) * 0.75);
 		fieldlist.x = FlxG.width - fieldlist.width;
-		hud.add(fieldlist);
+		var tab_group_1:FlxUI = new FlxUI(null, tab);
+		tab_group_1.id = "Inspect";
+		//tab_group_1.add(fieldlist);
+		//tab_group_1.add(new FlxUICheckBox(0, 0, FlxUIAssets.IMG_CHECK_BOX,FlxUIAssets.IMG_CHECK_MARK, "Test"));
+		tab.addGroup(tab_group_1);
+		
+		fieldlist2 = new FlxUIList(0, 0, null, FlxG.width / 4, (FlxG.height - 80) * 0.75);
+		fieldlist2.x = FlxG.width - fieldlist2.width;
+		var tab_group_2:FlxUI = new FlxUI(null, tab);
+		tab_group_2.id = "Apply";
+		//tab_group_2.add(fieldlist2);
+		//tab_group_2.add(new FlxUICheckBox(0, 0, FlxUIAssets.IMG_CHECK_BOX,FlxUIAssets.IMG_CHECK_MARK, "Test"));
+		tab.addGroup(tab_group_2);
+		
+		hud.add(tab);
 	}
 	
 	private function projCall(S:String):Void
@@ -133,43 +285,108 @@ class BasePage extends FlxUIState
 			case "Open project":
 				FileHandler.openProj(new FileReference(), loadProject);
 			case "Edit project":
-				openSubState(new EditProj());
+				if (Reg.proj == null)
+				{
+					openSubState(new MessagePopup("You must open a project first."));
+				}
+				else
+				{
+					openSubState(new EditProj());
+				}
 			case "Save project":
-				FileHandler.saveProj();
+				if (Reg.proj == null)
+				{
+					openSubState(new MessagePopup("You must open a project first."));
+				}
+				else
+				{
+					FileHandler.saveProj();
+				}
+			case "Close project":
+				if (Reg.proj == null)
+				{
+					openSubState(new MessagePopup("You must open a project first."));
+				}
+				else
+				{
+					//FileHandler.saveProj();
+				}
 		}
 	}
 	
 	private function imgCall(S:String):Void
 	{
-		switch (S)
+		if (Reg.proj == null)
 		{
-			case "Open image":
-				new ImgHandler();
-				
-			case "Close image":
-				
+			openSubState(new MessagePopup("You must open a project first."));
+		}
+		
+		else
+		{
+			switch (S)
+			{
+				case "Open image":
+					new ImgHandler();
+					
+				case "Close image":
+					
+			}
 		}
 	}
 	
 	private function sheetCall(S:String):Void
 	{
-		switch (S)
+		if (Reg.proj == null)
 		{
-			case "New sheet":
-				openSubState(new NewSheet());
-				
-			case "Open sheet":
-				
+			openSubState(new MessagePopup("You must open a project first."));
 		}
+		
+		else
+		{
+			switch (S)
+			{
+				case "New sheet":
+					openSubState(new NewSheet());
+					
+				case "Open sheet":
+					FileHandler.openSheet(new FileReference(), loadSheet);
+					
+				case "Save sheet":
+					if (Reg.sheet == null)
+					{
+						openSubState(new MessagePopup("You must open a sheet first."));
+					}
+					else
+					{
+						FileHandler.saveSheet();
+					}
+				case "Close sheet":
+					if (Reg.sheet == null)
+					{
+						openSubState(new MessagePopup("You must open a sheet first."));
+					}
+					else
+					{
+						//FileHandler.saveSheet();
+					}
+			}
+		}
+	}
+	
+	public function loadSheet(S:String):Void
+	{
+		Reg.sheet = Sheet.parse(S);
 	}
 	
 	public function loadProject(S:String):Void
 	{
 		Reg.proj = new Array<ProjField>();
+		Reg.props = new Map<String, Dynamic>();
+		Reg.props_inspect = new Map<String, Dynamic>();
 		
 		if (S.length > 0)
 		{
-			var data:Array<Dynamic> = cast TJSON.parse(S);
+			var data:Array<Dynamic> = cast Json.parse(S);
 			
 			for (x in data)
 			{
@@ -177,31 +394,45 @@ class BasePage extends FlxUIState
 				var t:String = Reflect.field(x, "type");
 				
 				Reg.proj.push(new ProjField(n, t));
-				trace(n, t);
-				makeNewPropAssets(n, t);
+				
+				makeNewPropAssets(n, t, "Inspect");
+				makeNewPropAssets(n, t, "Apply");
 			}
 		}
 	}
 	
-	private function makeNewPropAssets(Name:String, TypeOfUI:String):Void
+	private function makeNewPropAssets(Name:String, TypeOfUI:String, Tab:Dynamic):Void
 	{
-		var g:FlxUIGroup = new FlxUIGroup();
+		var g:FlxUIGroup = tab.getTabGroup(Tab);
+		var toset:Dynamic = null;
 		
-		var n:FlxUIText = new FlxUIText();
-		n.text = Name;
-		g.add(n);
+		if (TypeOfUI == "Checkbox")
+		{
+			var c:FlxUICheckBox = new FlxUICheckBox(0, g.y + g.frameHeight, FlxUIAssets.IMG_CHECK_BOX,FlxUIAssets.IMG_CHECK_MARK, Name);
+			g.add(c);
+			toset = c;
+		}
 		
-		var t:FlxUIText = new FlxUIText();
-		t.text = TypeOfUI;
-		t.x += 100;
-		g.add(t);
+		if (TypeOfUI == "Textfield")
+		{
+			var t:FlxUIInputText = new FlxUIInputText();
+			t.x = 0;
+			g.add(t);
+			
+			var n:FlxUIText = new FlxUIText();
+			n.color = 0xffffffff;
+			n.borderColor = 0xff000000;
+			n.text = Name;
+			n.x = t.width;
+			g.add(n);
+			
+			toset = t;
+		}
 		
-		var r:FlxUIButton = new FlxUIButton(200, 0, "Remove");
-		r.params = [g, n.text, t.text];
-		g.add(r);
-		
-		fieldlist.add(g);
-		fieldlist.refreshList();
+		if (Tab == "Apply")
+			Reg.props.set(Name, toset);
+		if (Tab == "Inspect")
+			Reg.props_inspect.set(Name, toset);
 	}
 	
 }

@@ -4,7 +4,7 @@ import flash.display.Loader;
 import flash.net.FileReference;
 import flash.net.FileFilter;
 import flash.events.Event;
-import tjson.TJSON;
+import haxe.Json;
 
 /**
  * ...
@@ -20,12 +20,26 @@ class FileHandler
 		ref.save("", Name + ".tset");
 	}
 	
-	static public function newSheet(Name:String, TileWidth:String, TileHeight:String):Void
+	static public function newSheet(Name:String, TileWidth:Float, TileHeight:Float):Void
 	{
 		var ref:FileReference = new FileReference();
-		var arr:Array<Dynamic> = [];
-		arr.push([Name, TileWidth, TileHeight]);
-		ref.save(TJSON.encode(arr), Name + ".json");
+		
+		Reg.sheet = new Sheet(Name, Std.int(TileWidth), Std.int(TileHeight));
+		
+		ref.save(Reg.sheet.stringify(), Name + ".json");
+	}
+	
+	static public function openSheet(FileRef:FileReference, Callback:String->Void):Void
+	{
+		call = Callback;
+		FileRef.addEventListener(Event.SELECT, onSelect);
+		FileRef.browse([new FileFilter("TileSetter level", "*.json")]);
+	}
+	
+	static public function saveSheet():Void
+	{
+		var ref:FileReference = new FileReference();
+		ref.save(Reg.sheet.stringify(), Reg.sheet.name + ".json");
 	}
 	
 	static public function openProj(FileRef:FileReference, Callback:String->Void):Void
@@ -38,7 +52,7 @@ class FileHandler
 	static public function saveProj():Void
 	{
 		var ref:FileReference = new FileReference();
-		ref.save(TJSON.encode(Reg.proj), Reg.proj_name);
+		ref.save(Json.stringify(Reg.proj), Reg.proj_name);
 	}
 	
 	static private function onSelect(e:Event):Void

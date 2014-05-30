@@ -24,6 +24,12 @@ class Reg
 	
 	public static var proj_name:String;
 	
+	public static var sheet:Sheet;
+	
+	public static var props_inspect:Map<String, Dynamic>;
+	
+	public static var props:Map<String, Dynamic>;
+	
 	public static var proj:Array<ProjField>;
 	
 	public static var base:BasePage;
