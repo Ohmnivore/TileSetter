@@ -5,6 +5,11 @@ WORK IN PROGRESS
 
 TODO:
 Radio group tile properties
-Enforce proper use of workflow (i.e. open project, then image, then sheet)
+Figure out flash local file sandbox security stuff
+Rework architecture
+Add remove tool
+Delete empty brushes
+Avoid brush duplication
 Make user interface more beautiful?
+Explain tilesheet JSON format
 Write flixel loader for tilesheets

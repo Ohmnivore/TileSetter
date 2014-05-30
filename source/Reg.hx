@@ -10,6 +10,8 @@ import flixel.addons.ui.StrIdLabel;
  */
 class Reg
 {
+	public static inline var VERSION:String = "0.1";
+	
 	static public function makeStrIdArray(Arr:Array<String>):Array<StrIdLabel>
 	{
 		var ret:Array<StrIdLabel> = [];
@@ -22,7 +24,11 @@ class Reg
 		return ret;
 	}
 	
+	public static var image_opened:Bool = false;
+	
 	public static var proj_name:String;
+	
+	public static var image_name:String;
 	
 	public static var sheet:Sheet;
 	

@@ -52,11 +52,11 @@ class ImgHandler
 		s.under_hud.add(s.tileset);
 		
 		FlxSpriteUtil.screenCenter(s.tileset, true, true);
-		//s.back.add(s.tilemap);
-		//s.tilemap.y = 30;
-		//s.overl.clear();
-		//s.selectrect = new Select(0, 0, 16, 16);
-		//s.overl.add(s.selectrect.select);
+		
+		Reg.image_name = seek.name;
+		
+		Reg.image_opened = true;
+		Reg.base.updateNames();
 	}
 	
 	public function loaderToFlxSprite(L:LoaderInfo):FlxSprite

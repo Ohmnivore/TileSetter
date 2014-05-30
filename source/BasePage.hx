@@ -1,6 +1,8 @@
 package ;
+import flash.geom.Rectangle;
 import flash.net.FileReference;
 import flixel.addons.ui.FlxUI;
+import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUIAssets;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUICheckBox;
@@ -19,6 +21,7 @@ import flixel.system.scaleModes.RatioScaleMode;
 import flixel.util.FlxRect;
 import flixel.util.FlxSpriteUtil;
 import haxe.Json;
+import substates.Help;
 import substates.MessagePopup;
 import substates.NewProj;
 import substates.EditProj;
@@ -44,11 +47,14 @@ class BasePage extends FlxUIState
 	
 	private var show_inspect:Bool = false;
 	
+	private var name_project:FlxUIText;
+	private var name_image:FlxUIText;
+	private var name_sheet:FlxUIText;
+	
 	override public function create() 
 	{
 		super.create();
 		Reg.base = this;
-		//Reg.proj = new Array<ProjField>();
 		
 		FlxG.scaleMode = new RatioScaleMode();
 		
@@ -59,6 +65,7 @@ class BasePage extends FlxUIState
 		
 		tileset = new FlxSprite();
 		under_hud.add(tileset);
+		tileset.makeGraphic(32, 32, 0x00000000);
 		
 		addHUD();
 		
@@ -274,6 +281,71 @@ class BasePage extends FlxUIState
 		tab.addGroup(tab_group_2);
 		
 		hud.add(tab);
+		
+		var chrome2:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, FlxG.height - 20, null, new Rectangle(0, 0, FlxG.width, 20));
+		hud.add(chrome2);
+		
+		name_project = new FlxUIText();
+		name_project.x = 5;
+		name_project.y = FlxG.height - 15;
+		name_project.borderColor = 0xff000000;
+		hud.add(name_project);
+		
+		name_image = new FlxUIText();
+		name_image.x = name_project.x + name_project.width + 5;
+		name_image.y = FlxG.height - 15;
+		name_image.borderColor = 0xff000000;
+		hud.add(name_image);
+		
+		name_sheet = new FlxUIText();
+		name_sheet.x = name_sheet.x + name_sheet.width + 5;
+		name_sheet.y = FlxG.height - 15;
+		name_sheet.borderColor = 0xff000000;
+		hud.add(name_sheet);
+		
+		updateNames();
+		
+		var help_btn:FlxUIButton = new FlxUIButton(0, 0, "Help", showHelp);
+		help_btn.x = proj.width + proj2.width + proj3.width + 5;
+		hud.add(help_btn);
+	}
+	
+	public function showHelp():Void
+	{
+		openSubState(new Help());
+	}
+	
+	public function updateNames():Void
+	{
+		if (Reg.proj_name == null)
+		{
+			name_project.text = "No project opened.";
+		}
+		else
+		{
+			name_project.text = "Project: " + Reg.proj_name;
+		}
+		
+		if (!Reg.image_opened)
+		{
+			name_image.text = "No image opened.";
+		}
+		else
+		{
+			name_image.text = "Image: " + Reg.image_name;
+		}
+		
+		if (Reg.sheet == null)
+		{
+			name_sheet.text = "No tilesheet opened.";
+		}
+		else
+		{
+			name_sheet.text = "Tilesheet: " + Reg.sheet.name;
+		}
+		
+		name_image.x = name_project.x + name_project.textField.textWidth + 5;
+		name_sheet.x = name_image.x + name_image.textField.textWidth + 5;
 	}
 	
 	private function projCall(S:String):Void
@@ -309,7 +381,16 @@ class BasePage extends FlxUIState
 				}
 				else
 				{
-					//FileHandler.saveProj();
+					if (Reg.image_opened)
+					{
+						openSubState(new MessagePopup("You must close the image first."));
+					}
+					
+					else
+					{
+						Reg.proj_name = null;
+						FlxG.switchState(new BasePage());
+					}
 				}
 		}
 	}
@@ -329,16 +410,37 @@ class BasePage extends FlxUIState
 					new ImgHandler();
 					
 				case "Close image":
+					if (!Reg.image_opened)
+					{
+						openSubState(new MessagePopup("You must open an image first."));
+					}
 					
+					else
+					{
+						if (Reg.sheet == null)
+						{
+							under_hud.clear();
+							tileset = new FlxSprite();
+							tileset.makeGraphic(32, 32, 0x00000000);
+							Reg.image_opened = false;
+							
+							updateNames();
+						}
+						
+						else
+						{
+							openSubState(new MessagePopup("You must close the tilesheet first."));
+						}
+					}
 			}
 		}
 	}
 	
 	private function sheetCall(S:String):Void
 	{
-		if (Reg.proj == null)
+		if (!Reg.image_opened)
 		{
-			openSubState(new MessagePopup("You must open a project first."));
+			openSubState(new MessagePopup("You must open an image first."));
 		}
 		
 		else
@@ -367,7 +469,8 @@ class BasePage extends FlxUIState
 					}
 					else
 					{
-						//FileHandler.saveSheet();
+						Reg.sheet = null;
+						updateNames();
 					}
 			}
 		}
@@ -376,6 +479,8 @@ class BasePage extends FlxUIState
 	public function loadSheet(S:String):Void
 	{
 		Reg.sheet = Sheet.parse(S);
+		
+		Reg.base.updateNames();
 	}
 	
 	public function loadProject(S:String):Void
@@ -399,6 +504,8 @@ class BasePage extends FlxUIState
 				makeNewPropAssets(n, t, "Apply");
 			}
 		}
+		
+		Reg.base.updateNames();
 	}
 	
 	private function makeNewPropAssets(Name:String, TypeOfUI:String, Tab:Dynamic):Void
@@ -408,7 +515,7 @@ class BasePage extends FlxUIState
 		
 		if (TypeOfUI == "Checkbox")
 		{
-			var c:FlxUICheckBox = new FlxUICheckBox(0, g.y + g.frameHeight, FlxUIAssets.IMG_CHECK_BOX,FlxUIAssets.IMG_CHECK_MARK, Name);
+			var c:FlxUICheckBox = new FlxUICheckBox(5, g.height + 2, FlxUIAssets.IMG_CHECK_BOX,FlxUIAssets.IMG_CHECK_MARK, Name);
 			g.add(c);
 			toset = c;
 		}
@@ -416,14 +523,16 @@ class BasePage extends FlxUIState
 		if (TypeOfUI == "Textfield")
 		{
 			var t:FlxUIInputText = new FlxUIInputText();
-			t.x = 0;
+			t.x = 5;
+			t.y = g.height + 2;
 			g.add(t);
 			
 			var n:FlxUIText = new FlxUIText();
 			n.color = 0xffffffff;
 			n.borderColor = 0xff000000;
 			n.text = Name;
-			n.x = t.width;
+			n.x = t.width + 7;
+			n.y = g.height + 2 - t.height;
 			g.add(n);
 			
 			toset = t;

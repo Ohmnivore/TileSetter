@@ -45,7 +45,7 @@ class FileHandler
 	static public function openProj(FileRef:FileReference, Callback:String->Void):Void
 	{
 		call = Callback;
-		FileRef.addEventListener(Event.SELECT, onSelect);
+		FileRef.addEventListener(Event.SELECT, onSelectProj);
 		FileRef.browse([new FileFilter("TileSetter project", "*.tset")]);
 	}
 	
@@ -55,10 +55,17 @@ class FileHandler
 		ref.save(Json.stringify(Reg.proj), Reg.proj_name);
 	}
 	
-	static private function onSelect(e:Event):Void
+	static private function onSelectProj(e:Event):Void
 	{
 		var f:FileReference = cast e.target;
 		Reg.proj_name = f.name;
+		f.load();
+		f.addEventListener(Event.COMPLETE, onComplete);
+	}
+	
+	static private function onSelect(e:Event):Void
+	{
+		var f:FileReference = cast e.target;
 		f.load();
 		f.addEventListener(Event.COMPLETE, onComplete);
 	}
