@@ -40,7 +40,8 @@ class Sheet
 		while (ind < b_keys.length)
 		{
 			var b:Brush = new Brush();
-			b.arr = cast b_values[ind];
+			b.arr = cast b_values[ind][0];
+			b.total_members = cast b_values[ind][1];
 			sheet.brushes.set(b_keys[ind], b);
 			ind++;
 		}
@@ -75,7 +76,7 @@ class Sheet
 		for (k in brushes.keys())
 		{
 			b_keys.push(k);
-			b_values.push(brushes.get(k).arr);
+			b_values.push([brushes.get(k).arr, brushes.get(k).total_members]);
 		}
 		arr.push(b_keys);
 		arr.push(b_values);

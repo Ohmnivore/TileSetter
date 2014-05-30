@@ -208,16 +208,119 @@ class BasePage extends FlxUIState
 						
 						brush.arr.push(inp.text);
 					}
+				}
+				
+				var same:Bool = false;
+				var found_key:Int = Reg.sheet.index;
+				var found_brush:Brush = brush;
+				for (key in Reg.sheet.brushes.keys())
+				{
+					same = true;
+					var b:Brush = Reg.sheet.brushes.get(key);
 					
+					var ind:Int = 0;
+					while (ind < b.arr.length)
+					{
+						if (b.arr[ind] != brush.arr[ind])
+						{
+							same = false;
+							break;
+						}
+						ind++;
+					}
+					
+					if (same)
+					{
+						found_brush = b;
+						found_key = key;
+						break;
+					}
+				}
+				
+				if (same)
+				{
+					for (x in selector.getSelected())
+					{
+						if (Reg.sheet.tiles.exists(x))
+						{
+							var old_brush:Brush = Reg.sheet.brushes.get(Reg.sheet.tiles.get(x));
+							old_brush.total_members--;
+							
+							if (old_brush.total_members <= 0)
+							{
+								Reg.sheet.brushes.remove(Reg.sheet.tiles.get(x));
+							}
+						}
+						
+						Reg.sheet.tiles.set(x, found_key);
+						found_brush.total_members++;
+					}
+				}
+				
+				else
+				{
 					Reg.sheet.brushes.set(Reg.sheet.index, brush);
 					
 					for (x in selector.getSelected())
 					{
+						if (Reg.sheet.tiles.exists(x))
+						{
+							var old_brush:Brush = Reg.sheet.brushes.get(Reg.sheet.tiles.get(x));
+							old_brush.total_members--;
+							
+							if (old_brush.total_members <= 0)
+							{
+								Reg.sheet.brushes.remove(Reg.sheet.tiles.get(x));
+							}
+						}
+						
 						Reg.sheet.tiles.set(x, Reg.sheet.index);
+						brush.total_members++;
+					}
+					
+					Reg.sheet.index++;
+				}
+			}
+			
+			if (FlxG.keys.justPressed.BACKSPACE || FlxG.keys.justPressed.DELETE)
+			{
+				for (x in selector.getSelected())
+				{
+					if (Reg.sheet.tiles.exists(x))
+					{
+						var old_brush:Brush = Reg.sheet.brushes.get(Reg.sheet.tiles.get(x));
+						old_brush.total_members--;
+						
+						if (old_brush.total_members <= 0)
+						{
+							Reg.sheet.brushes.remove(Reg.sheet.tiles.get(x));
+						}
+						
+						Reg.sheet.tiles.remove(x);
 					}
 				}
-				
-				Reg.sheet.index++;
+			}
+			
+			if (FlxG.keys.justPressed.R)
+			{
+				for (field in Reg.proj.iterator())
+				{
+					if (field.type == "Checkbox")
+					{
+						var check:FlxUICheckBox = cast Reg.props.get(field.name);
+						var check_source:FlxUICheckBox = cast Reg.props_inspect.get(field.name);
+						
+						check.checked = check_source.checked;
+					}
+					
+					if (field.type == "Textfield")
+					{
+						var inp:FlxUIInputText = cast Reg.props.get(field.name);
+						var inp_source:FlxUIInputText = cast Reg.props_inspect.get(field.name);
+						
+						inp.text = inp_source.text;
+					}
+				}
 			}
 		}
 		

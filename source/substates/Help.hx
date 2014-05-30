@@ -32,7 +32,9 @@ class Help extends FlxUIPopup
 			"Hold W/A/S/D to move the tilemap around, and press the spacebar to center it. " +
 			"Press Q to apply to selected tiles the properties defined in the Apply tab. " +
 			"Press E to read the properties of selected tiles. They will be shown in the Inspect tab " +
-			"if they have been assigned a property and if their properties are all the same. " +
+			"if the tiles have been assigned a property and if their properties are all the same. " +
+			"Press Backspace or Delete to remove all properties from selected tiles. " +
+			"Press R to set the Apply tab's properties same as the Inspect tab's properties. " +
 			"\n\nCoded by Ohmnivore." +
 			"\nVersion: " + Reg.VERSION;
 		
