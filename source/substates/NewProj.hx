@@ -4,6 +4,8 @@ import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUISubState;
+import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.util.FlxSpriteUtil;
 
 /**
@@ -17,6 +19,8 @@ class NewProj extends FlxUISubState
 	override public function create():Void 
 	{
 		super.create();
+		
+		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0x99000000));
 		
 		var chrome:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 0, null, new Rectangle(0, 0, 400, 200));
 		FlxSpriteUtil.screenCenter(chrome);

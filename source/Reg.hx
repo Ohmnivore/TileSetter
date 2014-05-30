@@ -10,7 +10,7 @@ import flixel.addons.ui.StrIdLabel;
  */
 class Reg
 {
-	public static inline var VERSION:String = "0.2";
+	public static inline var VERSION:String = "0.3";
 	
 	static public function makeStrIdArray(Arr:Array<String>):Array<StrIdLabel>
 	{

@@ -56,6 +56,8 @@ class BasePage extends FlxUIState
 		super.create();
 		Reg.base = this;
 		
+		add(new FlxSprite(0, 0, "assets/images/background.png"));
+		
 		FlxG.scaleMode = new RatioScaleMode();
 		
 		under_hud = new FlxGroup();
@@ -102,15 +104,15 @@ class BasePage extends FlxUIState
 		}
 		if (!tabRect.containsFlxPoint(FlxG.mouse.getScreenPosition()))
 		{
-			if (FlxG.mouse.justPressed && FlxG.mouse.y > 21)
+			if (FlxG.mouse.justPressed && FlxG.mouse.y > 26)
 			{
 				selector.setFirstAnchor(FlxG.mouse.x, FlxG.mouse.y, tileset);
 			}
-			if (FlxG.mouse.justReleased && FlxG.mouse.y > 21)
+			if (FlxG.mouse.justReleased && FlxG.mouse.y > 26)
 			{
 				selector.setFinalAnchor(FlxG.mouse.x, FlxG.mouse.y, tileset);
 			}
-			if (FlxG.mouse.pressed && FlxG.mouse.y > 21)
+			if (FlxG.mouse.pressed && FlxG.mouse.y > 26)
 			{
 				selector.setMediumAnchor(FlxG.mouse.x, FlxG.mouse.y, tileset);
 			}
@@ -340,21 +342,22 @@ class BasePage extends FlxUIState
 		selector = new Selector();
 		hud.add(selector);
 		
-		var cover:FlxSprite = new FlxSprite(0, 0);
-		cover.scrollFactor.set();
-		cover.makeGraphic(FlxG.width, 20, 0x99ffffff);
+		//var cover:FlxSprite = new FlxSprite(0, 0);
+		//cover.scrollFactor.set();
+		//cover.makeGraphic(FlxG.width, 20, 0x99ffffff);
+		var cover:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 0, null, new Rectangle(0, 0, FlxG.width, 25));
 		hud.add(cover);
 		
 		var opt:Array<StrIdLabel> = Reg.makeStrIdArray(["New project", "Open project", "Edit project", "Save project", "Close project"]);
-		var proj:FlxUIDropDownMenu = new FlxUIDropDownMenu(0, 0, opt, projCall);
+		var proj:FlxUIDropDownMenu = new FlxUIDropDownMenu(3, 2, opt, projCall);
 		hud.add(proj);
 		
 		var opt2:Array<StrIdLabel> = Reg.makeStrIdArray(["Open image", "Close image"]);
-		var proj2:FlxUIDropDownMenu = new FlxUIDropDownMenu(proj.width, 0, opt2, imgCall);
+		var proj2:FlxUIDropDownMenu = new FlxUIDropDownMenu(proj.width + 3, 2, opt2, imgCall);
 		hud.add(proj2);
 		
 		var opt3:Array<StrIdLabel> = Reg.makeStrIdArray(["New sheet", "Open sheet", "Save sheet", "Close sheet"]);
-		var proj3:FlxUIDropDownMenu = new FlxUIDropDownMenu(proj.width + proj2.width, 0, opt3, sheetCall);
+		var proj3:FlxUIDropDownMenu = new FlxUIDropDownMenu(proj.width + proj2.width + 3, 2, opt3, sheetCall);
 		hud.add(proj3);
 		
 		var tabs = [{ id:"Inspect", label:"Inspect" },
@@ -362,12 +365,13 @@ class BasePage extends FlxUIState
 		
 		tab = new FlxUITabMenu(null, tabs, true);
 		
-		tab.y = 21;
+		tab.y = 28;
 		tab.width = FlxG.width * 0.30;
 		tab.x = FlxG.width - tab.width;
+		tab.resize(tab.width, FlxG.height - 56);
 		tabRect = new FlxRect(tab.x, tab.y, tab.width, tab.height);
 		
-		fieldlist = new FlxUIList(0, 0, null, FlxG.width / 4, (FlxG.height - 80) * 0.75);
+		fieldlist = new FlxUIList(0, 10, null, FlxG.width / 4, (FlxG.height - 66));
 		fieldlist.x = FlxG.width - fieldlist.width;
 		var tab_group_1:FlxUI = new FlxUI(null, tab);
 		tab_group_1.id = "Inspect";
@@ -375,7 +379,7 @@ class BasePage extends FlxUIState
 		//tab_group_1.add(new FlxUICheckBox(0, 0, FlxUIAssets.IMG_CHECK_BOX,FlxUIAssets.IMG_CHECK_MARK, "Test"));
 		tab.addGroup(tab_group_1);
 		
-		fieldlist2 = new FlxUIList(0, 0, null, FlxG.width / 4, (FlxG.height - 80) * 0.75);
+		fieldlist2 = new FlxUIList(0, 10, null, FlxG.width / 4, (FlxG.height - 80) * 0.75);
 		fieldlist2.x = FlxG.width - fieldlist2.width;
 		var tab_group_2:FlxUI = new FlxUI(null, tab);
 		tab_group_2.id = "Apply";
@@ -408,8 +412,8 @@ class BasePage extends FlxUIState
 		
 		updateNames();
 		
-		var help_btn:FlxUIButton = new FlxUIButton(0, 0, "Help", showHelp);
-		help_btn.x = proj.width + proj2.width + proj3.width + 5;
+		var help_btn:FlxUIButton = new FlxUIButton(0, 2, "Help", showHelp);
+		help_btn.x = proj.width + proj2.width + proj3.width + 5 + 2;
 		hud.add(help_btn);
 	}
 	

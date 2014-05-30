@@ -6,6 +6,8 @@ import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUISubState;
+import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.util.FlxSpriteUtil;
 import flash.net.FileReference;
@@ -23,6 +25,8 @@ class NewSheet extends FlxUISubState
 	override public function create():Void 
 	{
 		super.create();
+		
+		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0x99000000));
 		
 		var chrome:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 0, null, new Rectangle(0, 0, 400, 200));
 		FlxSpriteUtil.screenCenter(chrome);

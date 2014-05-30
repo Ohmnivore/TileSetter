@@ -5,6 +5,7 @@ import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIPopup;
 import flixel.addons.ui.interfaces.IFlxUIWidget;
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.util.FlxSpriteUtil;
@@ -41,6 +42,8 @@ class Help extends FlxUIPopup
 		_xml_id = "message_popup";
 		
 		super.create();
+		
+		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0x99000000));
 		
 		var chrome:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 0, null, new Rectangle(0, 0, 400, 200));
 		FlxSpriteUtil.screenCenter(chrome);
