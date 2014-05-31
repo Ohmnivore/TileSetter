@@ -1,4 +1,4 @@
-#WORK IN PROGRESS
+**WORK IN PROGRESS**
 
 Written using Haxe, with haxeflixel and its library flixel-ui.
 
@@ -16,6 +16,6 @@ At this stage, to run TileSetter you must open TileSetter.swf in a stand-alone f
 * Write flixel loader for tilesheets
 
 ***
-#Screenshot:
+**Screenshot:**
 
 ![alt text](https://raw.githubusercontent.com/Ohmnivore/TileSetter/master/SCREENSHOT.png "Screenshot")
