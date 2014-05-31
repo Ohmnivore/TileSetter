@@ -9,10 +9,15 @@ Written using Haxe, with haxeflixel and its library flixel-ui.
 
 At this stage, to run TileSetter you must open TileSetter.swf in a stand-alone flash player (doesn't seem to work in-browser for reasons I don't understand). In the future I plan to fix the browser issue and port it to Neko and native platforms.
 
+
+#Wiki:
+
+[Wiki](https://github.com/Ohmnivore/TileSetter/wiki)
+
+
 #TODO:
 * Figure out flash local file sandbox security stuff
 * Rework architecture
-* Explain tilesheet JSON format
 * Write flixel loader for tilesheets
 
 ***
