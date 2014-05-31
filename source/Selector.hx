@@ -20,6 +20,8 @@ class Selector extends FlxSprite
 	
 	private var rect:FlxRect;
 	
+	public var zoom:Float = 1;
+	
 	public function new() 
 	{
 		super(0, 0);
@@ -90,8 +92,8 @@ class Selector extends FlxSprite
 	{
 		var ret:FlxPoint = new FlxPoint();
 		
-		ret.set(Std.int(X / 16) * 16 + S.x % 16 - x,
-			Std.int(Y / 16) * 16 + S.y % 16 - y);
+		ret.set(Std.int(X / (Reg.sheet.tile_width * zoom)) * Reg.sheet.tile_width * zoom + S.x % (Reg.sheet.tile_width * zoom) - x,
+			Std.int(Y / (Reg.sheet.tile_height  * zoom)) * Reg.sheet.tile_height * zoom + S.y % (Reg.sheet.tile_height * zoom) - y);
 		
 		return ret;
 	}
@@ -100,27 +102,27 @@ class Selector extends FlxSprite
 	{
 		var ret:Array<Int> = [];
 		
-		var y_count:Int = Std.int(rect.y / 16);
-		var x_count:Int = Std.int(rect.x / 16);
-		var x_limit:Int = Std.int((rect.x + rect.width) / 16);
-		var y_limit:Int = Std.int((rect.y + rect.height) / 16);
+		var y_count:Int = Std.int(rect.y / (Reg.sheet.tile_height * zoom));
+		var x_count:Int = Std.int(rect.x / (Reg.sheet.tile_width * zoom));
+		var x_limit:Int = Std.int((rect.x + rect.width) / (Reg.sheet.tile_width * zoom));
+		var y_limit:Int = Std.int((rect.y + rect.height) / (Reg.sheet.tile_height * zoom));
 		
 		while (y_count < y_limit)
 		{
 			while (x_count < x_limit)
 			{
-				var index:Int = y_count * Std.int(Reg.base.tileset.width / 16);
+				var index:Int = y_count * Std.int((Reg.base.tileset.width * zoom) / (Reg.sheet.tile_width * zoom));
 				index += x_count;
 				
 				if (index >= 0 &&
-					index < Std.int(Reg.base.tileset.width / 16) * Std.int(Reg.base.tileset.height / 16))
+					index < Std.int((Reg.base.tileset.width * zoom) / (Reg.sheet.tile_width * zoom)) * Std.int((Reg.base.tileset.height * zoom) / (Reg.sheet.tile_height * zoom)))
 				{
 					ret.push(index);
 				}
 				
 				x_count++;
 			}
-			x_count = Std.int(rect.x / 16);
+			x_count = Std.int(rect.x / (Reg.sheet.tile_width * zoom));
 			
 			y_count++;
 		}

@@ -18,6 +18,8 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.system.scaleModes.RatioScaleMode;
+import flixel.text.FlxText;
+import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 import flixel.util.FlxSpriteUtil;
 import haxe.Json;
@@ -102,17 +104,18 @@ class BasePage extends FlxUIState
 		{
 			FlxSpriteUtil.screenCenter(tileset, true, true);
 		}
-		if (!tabRect.containsFlxPoint(FlxG.mouse.getScreenPosition()))
+		if (!tabRect.containsFlxPoint(FlxG.mouse.getScreenPosition()) && FlxG.mouse.y > 26
+			&& Reg.sheet != null)
 		{
-			if (FlxG.mouse.justPressed && FlxG.mouse.y > 26)
+			if (FlxG.mouse.justPressed)
 			{
 				selector.setFirstAnchor(FlxG.mouse.x, FlxG.mouse.y, tileset);
 			}
-			if (FlxG.mouse.justReleased && FlxG.mouse.y > 26)
+			if (FlxG.mouse.justReleased)
 			{
 				selector.setFinalAnchor(FlxG.mouse.x, FlxG.mouse.y, tileset);
 			}
-			if (FlxG.mouse.pressed && FlxG.mouse.y > 26)
+			if (FlxG.mouse.pressed)
 			{
 				selector.setMediumAnchor(FlxG.mouse.x, FlxG.mouse.y, tileset);
 			}
@@ -342,9 +345,6 @@ class BasePage extends FlxUIState
 		selector = new Selector();
 		hud.add(selector);
 		
-		//var cover:FlxSprite = new FlxSprite(0, 0);
-		//cover.scrollFactor.set();
-		//cover.makeGraphic(FlxG.width, 20, 0x99ffffff);
 		var cover:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 0, null, new Rectangle(0, 0, FlxG.width, 25));
 		hud.add(cover);
 		
@@ -415,6 +415,39 @@ class BasePage extends FlxUIState
 		var help_btn:FlxUIButton = new FlxUIButton(0, 2, "Help", showHelp);
 		help_btn.x = proj.width + proj2.width + proj3.width + 5 + 2;
 		hud.add(help_btn);
+		
+		var plus:FlxUIButton = new FlxUIButton(0, 2, "+", zoomIn);
+		plus.x = FlxG.width - plus.width;
+		add(plus);
+		
+		var minus:FlxUIButton = new FlxUIButton(0, 2, "-", zoomOut);
+		minus.x = FlxG.width - plus.width - minus.width;
+		add(minus);
+		
+		var info_zoom:FlxUIText = new FlxUIText();
+		info_zoom.y = 2;
+		info_zoom.text = "Zoom: ";
+		info_zoom.color = 0xffffffff;
+		info_zoom.borderColor = 0xff000000;
+		info_zoom.updateFrameData();
+		info_zoom.x = FlxG.width - plus.width - minus.width - info_zoom.textField.width;
+		add(info_zoom);
+	}
+	
+	private function zoomIn():Void
+	{
+		tileset.setGraphicSize(Std.int(tileset.width * 1.2), Std.int(tileset.height * 1.2));
+		tileset.setSize(Std.int(tileset.width * 1.2), Std.int(tileset.height * 1.2));
+		tileset.origin.set();
+		selector.zoom *= 1.2;
+	}
+	
+	private function zoomOut():Void
+	{
+		tileset.setGraphicSize(Std.int(tileset.width / 1.2), Std.int(tileset.height / 1.2));
+		tileset.setSize(Std.int(tileset.width / 1.2), Std.int(tileset.height / 1.2));
+		tileset.origin.set();
+		selector.zoom /= 1.2;
 	}
 	
 	public function showHelp():Void

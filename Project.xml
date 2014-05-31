@@ -46,8 +46,6 @@
 	
 	<!--------------------------------HAXEDEFINES----------------------------------->
 	
-	<haxedef name="haxeJSON" />
-	
 	<!--Enable the Flixel core recording system-->
 	<!--haxedef name="FLX_RECORD" /-->
 	
