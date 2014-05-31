@@ -1,1 +1,1 @@
-[{"name":"solid","type":"Checkbox"},{"name":"name","type":"Textfield"}]
+[{"name":"Radio","opts":["Water","Ice"],"type":"Radio group"}]

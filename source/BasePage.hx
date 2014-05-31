@@ -9,6 +9,7 @@ import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIGroup;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUIList;
+import flixel.addons.ui.FlxUIRadioGroup;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUITabMenu;
@@ -17,6 +18,8 @@ import flixel.addons.ui.StrIdLabel;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
+import flixel.system.scaleModes.FixedScaleMode;
+import flixel.system.scaleModes.PixelPerfectScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
 import flixel.text.FlxText;
 import flixel.util.FlxPoint;
@@ -60,7 +63,7 @@ class BasePage extends FlxUIState
 		
 		add(new FlxSprite(0, 0, "assets/images/background.png"));
 		
-		FlxG.scaleMode = new RatioScaleMode();
+		FlxG.scaleMode = new PixelPerfectScaleMode();
 		
 		under_hud = new FlxGroup();
 		hud = new FlxGroup();
@@ -189,6 +192,13 @@ class BasePage extends FlxUIState
 							inp.text = brush.arr[ind];
 						}
 						
+						if (field.type == "Radio group")
+						{
+							var inp:FlxUIRadioGroup = cast Reg.props_inspect.get(field.name);
+							
+							inp.selectedId = brush.arr[ind];
+						}
+						
 						ind++;
 					}
 				}
@@ -212,6 +222,13 @@ class BasePage extends FlxUIState
 						var inp:FlxUIInputText = cast Reg.props.get(field.name);
 						
 						brush.arr.push(inp.text);
+					}
+					
+					if (field.type == "Radio group")
+					{
+						var inp:FlxUIRadioGroup = cast Reg.props.get(field.name);
+						
+						brush.arr.push(inp.selectedId);
 					}
 				}
 				
@@ -324,6 +341,14 @@ class BasePage extends FlxUIState
 						var inp_source:FlxUIInputText = cast Reg.props_inspect.get(field.name);
 						
 						inp.text = inp_source.text;
+					}
+					
+					if (field.type == "Radio group")
+					{
+						var inp:FlxUIRadioGroup = cast Reg.props.get(field.name);
+						var inp_source:FlxUIRadioGroup = cast Reg.props_inspect.get(field.name);
+						
+						inp.selectedId = inp_source.selectedId;
 					}
 				}
 			}
@@ -635,20 +660,35 @@ class BasePage extends FlxUIState
 			
 			for (x in data)
 			{
-				var n:String = Reflect.field(x, "name");
-				var t:String = Reflect.field(x, "type");
-				
-				Reg.proj.push(new ProjField(n, t));
-				
-				makeNewPropAssets(n, t, "Inspect");
-				makeNewPropAssets(n, t, "Apply");
+				if (Reflect.hasField(x, "opts"))
+				{
+					var n:String = Reflect.field(x, "name");
+					var t:String = Reflect.field(x, "type");
+					
+					var radio:RadioField = new RadioField(n, t);
+					radio.opts = Reflect.field(x, "opts");
+					Reg.proj.push(radio);
+					
+					makeNewPropAssets(n, t, "Inspect", radio);
+					makeNewPropAssets(n, t, "Apply", radio);
+				}
+				else
+				{
+					var n:String = Reflect.field(x, "name");
+					var t:String = Reflect.field(x, "type");
+					
+					Reg.proj.push(new ProjField(n, t));
+					
+					makeNewPropAssets(n, t, "Inspect");
+					makeNewPropAssets(n, t, "Apply");
+				}
 			}
 		}
 		
 		Reg.base.updateNames();
 	}
 	
-	private function makeNewPropAssets(Name:String, TypeOfUI:String, Tab:Dynamic):Void
+	public function makeNewPropAssets(Name:String, TypeOfUI:String, Tab:Dynamic, Radio:RadioField = null):Void
 	{
 		var g:FlxUIGroup = tab.getTabGroup(Tab);
 		var toset:Dynamic = null;
@@ -678,10 +718,42 @@ class BasePage extends FlxUIState
 			toset = t;
 		}
 		
+		if (TypeOfUI == "Radio group")
+		{
+			var n:FlxUIText = new FlxUIText();
+			n.color = 0xffffffff;
+			n.borderColor = 0xff000000;
+			n.text = Name;
+			n.x = 5;
+			n.y = g.height + 2;
+			g.add(n);
+			
+			var r:FlxUIRadioGroup = new FlxUIRadioGroup(5, g.height, Radio.opts, Radio.opts);
+			//r.height += 20;
+			g.add(r);
+			toset = r;
+		}
+		
 		if (Tab == "Apply")
 			Reg.props.set(Name, toset);
 		if (Tab == "Inspect")
 			Reg.props_inspect.set(Name, toset);
+	}
+	
+	public function updateRadioField(Radio:RadioField, Tab:Dynamic):Void
+	{
+		if (Tab == "Apply")
+		{
+			//trace(Radio.name);
+			var radio:FlxUIRadioGroup = cast Reg.props.get(Radio.name);
+			radio.updateRadios(Radio.opts, Radio.opts);
+		}
+		
+		if (Tab == "Inspect")
+		{
+			var radio:FlxUIRadioGroup = cast Reg.props_inspect.get(Radio.name);
+			radio.updateRadios(Radio.opts, Radio.opts);
+		}
 	}
 	
 }

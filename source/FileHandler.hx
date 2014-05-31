@@ -4,6 +4,7 @@ import flash.display.Loader;
 import flash.net.FileReference;
 import flash.net.FileFilter;
 import flash.events.Event;
+import flixel.FlxG;
 import haxe.Json;
 
 /**

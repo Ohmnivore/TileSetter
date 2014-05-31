@@ -12,6 +12,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxSpriteUtil;
 import flixel.addons.ui.StrIdLabel;
+import haxe.Constraints.Function;
 
 /**
  * ...
@@ -40,7 +41,7 @@ class EditProj extends FlxUISubState
 		name = new FlxUIInputText();
 		name.x = type_select.width + type_select.x;
 		name.y = 43;
-		name.text = "name";
+		name.text = "Property name";
 		add(name);
 		
 		var go:FlxUIButton = new FlxUIButton(type_select.x + type_select.width + name.width + 5, 40, "Add", makeNewProp);
@@ -60,7 +61,22 @@ class EditProj extends FlxUISubState
 	
 	private function addExistingProp(Field:ProjField):Void
 	{
-		makeNewPropAssets(Field.name, Field.type);
+		if (Field.type == "Radio group")
+		{
+			var radio:RadioField = cast Field;
+			
+			makeNewPropAssets(radio.name, radio.type, radio);
+			
+			//Reg.base.makeNewPropAssets(radio.name, radio.type, "Inspect", radio);
+			//Reg.base.makeNewPropAssets(radio.name, radio.type, "Apply", radio);
+		}
+		else
+		{
+			makeNewPropAssets(Field.name, Field.type);
+			
+			//Reg.base.makeNewPropAssets(Field.name, Field.type, "Inspect");
+			//Reg.base.makeNewPropAssets(Field.name, Field.type, "Apply");
+		}
 	}
 	
 	private function makeNewProp():Void
@@ -77,12 +93,32 @@ class EditProj extends FlxUISubState
 		
 		if (!found)
 		{
-			makeNewPropAssets(name.text, type_select.selectedLabel);
-			Reg.proj.push(new ProjField(name.text, type_select.selectedLabel));
+			if (type_select.selectedLabel == "Radio group")
+			{
+				var radio:RadioField = new RadioField(name.text, type_select.selectedLabel);
+				
+				makeNewPropAssets(name.text, type_select.selectedLabel, radio);
+				
+				Reg.proj.push(radio);
+				
+				Reg.base.makeNewPropAssets(name.text, type_select.selectedLabel, "Inspect", radio);
+				Reg.base.makeNewPropAssets(name.text, type_select.selectedLabel, "Apply", radio);
+				
+				openSubState(new EditRadio(radio));
+			}
+			else
+			{
+				makeNewPropAssets(name.text, type_select.selectedLabel);
+				
+				Reg.proj.push(new ProjField(name.text, type_select.selectedLabel));
+				
+				Reg.base.makeNewPropAssets(name.text, type_select.selectedLabel, "Inspect");
+				Reg.base.makeNewPropAssets(name.text, type_select.selectedLabel, "Apply");
+			}
 		}
 	}
 	
-	private function makeNewPropAssets(Name:String, TypeOfUI:String):Void
+	private function makeNewPropAssets(Name:String, TypeOfUI:String, Radio:RadioField = null):Void
 	{
 		var g:FlxUIGroup = new FlxUIGroup();
 		
@@ -99,6 +135,13 @@ class EditProj extends FlxUISubState
 		r.params = [g, n.text, t.text];
 		g.add(r);
 		
+		if (TypeOfUI == "Radio group")
+		{
+			var e:FlxUIButton = new FlxUIButton(r.x + r.width, 0, "Edit");
+			e.params = [Radio];
+			g.add(e);
+		}
+		
 		fieldlist.add(g);
 		fieldlist.refreshList();
 	}
@@ -110,17 +153,25 @@ class EditProj extends FlxUISubState
 			switch(id)
 			{
 				case "click_button":
-					var g:FlxUIGroup = cast params[0];
-					fieldlist.remove(g, true);
-					fieldlist.refreshList();
-					
-					for (f in Reg.proj.iterator())
+					if (params.length == 3)
 					{
-						if (f.name == cast(params[1], String) && f.type == cast (params[2], String))
+						var g:FlxUIGroup = cast params[0];
+						fieldlist.remove(g, true);
+						fieldlist.refreshList();
+						
+						for (f in Reg.proj.iterator())
 						{
-							Reg.proj.remove(f);
-							f = null;
+							if (f.name == cast(params[1], String) && f.type == cast (params[2], String))
+							{
+								Reg.proj.remove(f);
+								f = null;
+							}
 						}
+					}
+					
+					if (params.length == 1)
+					{
+						openSubState(new EditRadio(cast params[0]));
 					}
 			}
 		}

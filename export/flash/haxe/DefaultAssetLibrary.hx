@@ -38,8 +38,14 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("assets/data/data-goes-here.txt", __ASSET__assets_data_data_goes_here_txt);
 		type.set ("assets/data/data-goes-here.txt", Reflect.field (AssetType, "text".toUpperCase ()));
+		className.set ("assets/gfx/ui/button.png", __ASSET__assets_gfx_ui_button_png);
+		type.set ("assets/gfx/ui/button.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		className.set ("assets/gfx/ui/buttons/button.png", __ASSET__assets_gfx_ui_buttons_button_png);
+		type.set ("assets/gfx/ui/buttons/button.png", Reflect.field (AssetType, "image".toUpperCase ()));
 		className.set ("assets/images/background.png", __ASSET__assets_images_background_png);
 		type.set ("assets/images/background.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		className.set ("assets/images/button.png", __ASSET__assets_images_button_png);
+		type.set ("assets/images/button.png", Reflect.field (AssetType, "image".toUpperCase ()));
 		className.set ("assets/images/images-go-here.txt", __ASSET__assets_images_images_go_here_txt);
 		type.set ("assets/images/images-go-here.txt", Reflect.field (AssetType, "text".toUpperCase ()));
 		className.set ("assets/music/music-goes-here.txt", __ASSET__assets_music_music_goes_here_txt);
@@ -115,7 +121,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#elseif html5
 		
 		addExternal("assets/data/data-goes-here.txt", "text", "assets/data/data-goes-here.txt");
+		addExternal("assets/gfx/ui/button.png", "image", "assets/gfx/ui/button.png");
+		addExternal("assets/gfx/ui/buttons/button.png", "image", "assets/gfx/ui/buttons/button.png");
 		addExternal("assets/images/background.png", "image", "assets/images/background.png");
+		addExternal("assets/images/button.png", "image", "assets/images/button.png");
 		addExternal("assets/images/images-go-here.txt", "text", "assets/images/images-go-here.txt");
 		addExternal("assets/music/music-goes-here.txt", "text", "assets/music/music-goes-here.txt");
 		addExternal("assets/sounds/sounds-go-here.txt", "text", "assets/sounds/sounds-go-here.txt");
@@ -162,8 +171,17 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("assets/data/data-goes-here.txt", __ASSET__assets_data_data_goes_here_txt);
 		type.set ("assets/data/data-goes-here.txt", Reflect.field (AssetType, "text".toUpperCase ()));
 		
+		className.set ("assets/gfx/ui/button.png", __ASSET__assets_gfx_ui_button_png);
+		type.set ("assets/gfx/ui/button.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		
+		className.set ("assets/gfx/ui/buttons/button.png", __ASSET__assets_gfx_ui_buttons_button_png);
+		type.set ("assets/gfx/ui/buttons/button.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		
 		className.set ("assets/images/background.png", __ASSET__assets_images_background_png);
 		type.set ("assets/images/background.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		
+		className.set ("assets/images/button.png", __ASSET__assets_images_button_png);
+		type.set ("assets/images/button.png", Reflect.field (AssetType, "image".toUpperCase ()));
 		
 		className.set ("assets/images/images-go-here.txt", __ASSET__assets_images_images_go_here_txt);
 		type.set ("assets/images/images-go-here.txt", Reflect.field (AssetType, "text".toUpperCase ()));
@@ -853,7 +871,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 #elseif flash
 
 @:keep class __ASSET__assets_data_data_goes_here_txt extends flash.utils.ByteArray { }
+@:keep class __ASSET__assets_gfx_ui_button_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep class __ASSET__assets_gfx_ui_buttons_button_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__assets_images_background_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep class __ASSET__assets_images_button_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__assets_images_images_go_here_txt extends flash.utils.ByteArray { }
 @:keep class __ASSET__assets_music_music_goes_here_txt extends flash.utils.ByteArray { }
 @:keep class __ASSET__assets_sounds_sounds_go_here_txt extends flash.utils.ByteArray { }
@@ -932,11 +953,17 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
+
+
 #elseif (windows || mac || linux)
 
 
 @:file("assets/data/data-goes-here.txt") class __ASSET__assets_data_data_goes_here_txt extends flash.utils.ByteArray {}
+@:bitmap("assets/gfx/ui/button.png") class __ASSET__assets_gfx_ui_button_png extends flash.display.BitmapData {}
+@:bitmap("assets/gfx/ui/buttons/button.png") class __ASSET__assets_gfx_ui_buttons_button_png extends flash.display.BitmapData {}
 @:bitmap("assets/images/background.png") class __ASSET__assets_images_background_png extends flash.display.BitmapData {}
+@:bitmap("assets/images/button.png") class __ASSET__assets_images_button_png extends flash.display.BitmapData {}
 @:file("assets/images/images-go-here.txt") class __ASSET__assets_images_images_go_here_txt extends flash.utils.ByteArray {}
 @:file("assets/music/music-goes-here.txt") class __ASSET__assets_music_music_goes_here_txt extends flash.utils.ByteArray {}
 @:file("assets/sounds/sounds-go-here.txt") class __ASSET__assets_sounds_sounds_go_here_txt extends flash.utils.ByteArray {}
