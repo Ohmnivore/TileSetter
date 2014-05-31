@@ -653,6 +653,8 @@ class BasePage extends FlxUIState
 		Reg.proj = new Array<ProjField>();
 		Reg.props = new Map<String, Dynamic>();
 		Reg.props_inspect = new Map<String, Dynamic>();
+		tab.getTabGroup("Apply").clear();
+		tab.getTabGroup("Inspect").clear();
 		
 		if (S.length > 0)
 		{
@@ -686,6 +688,40 @@ class BasePage extends FlxUIState
 		}
 		
 		Reg.base.updateNames();
+	}
+	
+	public function updateTabs():Void
+	{
+		Reg.props = new Map<String, Dynamic>();
+		Reg.props_inspect = new Map<String, Dynamic>();
+		tab.getTabGroup("Apply").clear();
+		tab.getTabGroup("Inspect").clear();
+		
+		for (x in Reg.proj)
+		{
+			if (Reflect.hasField(x, "opts"))
+			{
+				var n:String = Reflect.field(x, "name");
+				var t:String = Reflect.field(x, "type");
+				
+				var radio:RadioField = new RadioField(n, t);
+				radio.opts = Reflect.field(x, "opts");
+				//Reg.proj.push(radio);
+				
+				makeNewPropAssets(n, t, "Inspect", radio);
+				makeNewPropAssets(n, t, "Apply", radio);
+			}
+			else
+			{
+				var n:String = Reflect.field(x, "name");
+				var t:String = Reflect.field(x, "type");
+				
+				//Reg.proj.push(new ProjField(n, t));
+				
+				makeNewPropAssets(n, t, "Inspect");
+				makeNewPropAssets(n, t, "Apply");
+			}
+		}
 	}
 	
 	public function makeNewPropAssets(Name:String, TypeOfUI:String, Tab:Dynamic, Radio:RadioField = null):Void

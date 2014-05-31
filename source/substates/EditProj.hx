@@ -179,6 +179,7 @@ class EditProj extends FlxUISubState
 	
 	private function cancel():Void
 	{
+		Reg.base.updateTabs();
 		close();
 	}
 }
