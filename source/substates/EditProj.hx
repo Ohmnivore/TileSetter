@@ -30,12 +30,12 @@ class EditProj extends FlxUISubState
 		
 		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0x99000000));
 		
-		var chrome:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 0, null, new Rectangle(0, 0, FlxG.width, FlxG.height - 60));
+		var chrome:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 0, Assets.CHROME, new Rectangle(0, 0, FlxG.width, FlxG.height - 60));
 		FlxSpriteUtil.screenCenter(chrome);
 		add(chrome);
 		
 		var opt:Array<StrIdLabel> = Reg.makeStrIdArray(["Checkbox", "Textfield", "Radio group"]);
-		type_select = new FlxUIDropDownMenu(10, 40, opt);
+		type_select = new FlxUIDropDownMenu(10, 40, opt, Assets.createHeader());
 		add(type_select);
 		
 		name = new FlxUIInputText();
@@ -45,9 +45,11 @@ class EditProj extends FlxUISubState
 		add(name);
 		
 		var go:FlxUIButton = new FlxUIButton(type_select.x + type_select.width + name.width + 5, 40, "Add", makeNewProp);
+		Assets.setBtnGraphic(go);
 		add(go);
 		
 		var ret:FlxUIButton = new FlxUIButton(type_select.x + type_select.width + name.width + go.width + 5, 40, "Done", cancel);
+		Assets.setBtnGraphic(ret);
 		add(ret);
 		
 		fieldlist = new FlxUIList(10, 95, null, FlxG.width, (FlxG.height - 95) * 0.75);
@@ -132,12 +134,14 @@ class EditProj extends FlxUISubState
 		g.add(t);
 		
 		var r:FlxUIButton = new FlxUIButton(200, 0, "Remove");
+		Assets.setBtnGraphic(r);
 		r.params = [g, n.text, t.text];
 		g.add(r);
 		
 		if (TypeOfUI == "Radio group")
 		{
 			var e:FlxUIButton = new FlxUIButton(r.x + r.width, 0, "Edit");
+			Assets.setBtnGraphic(e);
 			e.params = [Radio];
 			g.add(e);
 		}

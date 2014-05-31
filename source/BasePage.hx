@@ -10,6 +10,7 @@ import flixel.addons.ui.FlxUIGroup;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUIList;
 import flixel.addons.ui.FlxUIRadioGroup;
+import flixel.addons.ui.FlxUISpriteButton;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUITabMenu;
@@ -370,19 +371,22 @@ class BasePage extends FlxUIState
 		selector = new Selector();
 		hud.add(selector);
 		
-		var cover:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 0, null, new Rectangle(0, 0, FlxG.width, 25));
+		var cover:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 0, Assets.CHROME, new Rectangle(0, 0, FlxG.width, 25));
 		hud.add(cover);
 		
 		var opt:Array<StrIdLabel> = Reg.makeStrIdArray(["New project", "Open project", "Edit project", "Save project", "Close project"]);
-		var proj:FlxUIDropDownMenu = new FlxUIDropDownMenu(3, 2, opt, projCall);
+		var proj:FlxUIDropDownMenu = new FlxUIDropDownMenu(3, 2, opt, projCall, Assets.createHeader());
+		proj.header.text.text = "Project";
 		hud.add(proj);
 		
 		var opt2:Array<StrIdLabel> = Reg.makeStrIdArray(["Open image", "Close image"]);
-		var proj2:FlxUIDropDownMenu = new FlxUIDropDownMenu(proj.width + 3, 2, opt2, imgCall);
+		var proj2:FlxUIDropDownMenu = new FlxUIDropDownMenu(proj.width + 3, 2, opt2, imgCall, Assets.createHeader());
+		proj2.header.text.text = "Image";
 		hud.add(proj2);
 		
 		var opt3:Array<StrIdLabel> = Reg.makeStrIdArray(["New sheet", "Open sheet", "Save sheet", "Close sheet"]);
-		var proj3:FlxUIDropDownMenu = new FlxUIDropDownMenu(proj.width + proj2.width + 3, 2, opt3, sheetCall);
+		var proj3:FlxUIDropDownMenu = new FlxUIDropDownMenu(proj.width + proj2.width + 3, 2, opt3, sheetCall, Assets.createHeader());
+		proj3.header.text.text = "File";
 		hud.add(proj3);
 		
 		var tabs = [{ id:"Inspect", label:"Inspect" },
@@ -414,7 +418,7 @@ class BasePage extends FlxUIState
 		
 		hud.add(tab);
 		
-		var chrome2:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, FlxG.height - 20, null, new Rectangle(0, 0, FlxG.width, 20));
+		var chrome2:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, FlxG.height - 20, Assets.CHROME, new Rectangle(0, 0, FlxG.width, 20));
 		hud.add(chrome2);
 		
 		name_project = new FlxUIText();
@@ -438,14 +442,17 @@ class BasePage extends FlxUIState
 		updateNames();
 		
 		var help_btn:FlxUIButton = new FlxUIButton(0, 2, "Help", showHelp);
+		Assets.setBtnGraphic(help_btn);
 		help_btn.x = proj.width + proj2.width + proj3.width + 5 + 2;
 		hud.add(help_btn);
 		
 		var plus:FlxUIButton = new FlxUIButton(0, 2, "+", zoomIn);
+		Assets.setBtnGraphic(plus);
 		plus.x = FlxG.width - plus.width;
 		add(plus);
 		
 		var minus:FlxUIButton = new FlxUIButton(0, 2, "-", zoomOut);
+		Assets.setBtnGraphic(minus);
 		minus.x = FlxG.width - plus.width - minus.width;
 		add(minus);
 		

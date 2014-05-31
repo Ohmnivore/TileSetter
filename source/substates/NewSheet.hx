@@ -28,7 +28,7 @@ class NewSheet extends FlxUISubState
 		
 		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0x99000000));
 		
-		var chrome:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 0, null, new Rectangle(0, 0, 400, 200));
+		var chrome:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 0, Assets.CHROME, new Rectangle(0, 0, 400, 200));
 		FlxSpriteUtil.screenCenter(chrome);
 		add(chrome);
 		
@@ -36,22 +36,24 @@ class NewSheet extends FlxUISubState
 		add(inp);
 		FlxSpriteUtil.screenCenter(inp, true, true);
 		inp.text = "Sheet name";
-		inp2 = new FlxUINumericStepper(0, 0, 1, 16, 1, 999, 0, FlxUINumericStepper.STACK_HORIZONTAL, new FlxText(0, 0, 0, "Tile width"));
+		inp2 = new FlxUINumericStepper(0, 0, 1, 16, 1, 999, 0, FlxUINumericStepper.STACK_HORIZONTAL, new FlxText(0, 0, 0, "Tile width"), Assets.getStepperPlus(), Assets.getStepperMinus());
 		FlxSpriteUtil.screenCenter(inp2);
 		inp2.y += inp.height + 4;
 		add(inp2);
-		add(new FlxText(inp2.x + inp2.width, inp2.y, 0, "Tile width"));
-		inp3 = new FlxUINumericStepper(0, 0, 1, 16, 1, 999, 0, FlxUINumericStepper.STACK_HORIZONTAL, new FlxText(0, 0, 0, "Tile width"));
+		add(new FlxText(inp2.x + inp2.width, inp2.y, 0, "Tile width (px)"));
+		inp3 = new FlxUINumericStepper(0, 0, 1, 16, 1, 999, 0, FlxUINumericStepper.STACK_HORIZONTAL, new FlxText(0, 0, 0, "Tile width"), Assets.getStepperPlus(), Assets.getStepperMinus());
 		FlxSpriteUtil.screenCenter(inp3);
 		inp3.y += inp.height + 4 + inp2.height;
 		add(inp3);
-		add(new FlxText(inp3.x + inp3.width, inp3.y, 0, "Tile height"));
+		add(new FlxText(inp3.x + inp3.width, inp3.y, 0, "Tile height (px)"));
 		
 		var go:FlxUIButton = new FlxUIButton(0, inp3.y + 20, "New sheet", createNew);
+		Assets.setBtnGraphic(go);
 		add(go);
 		FlxSpriteUtil.screenCenter(go, true, false);
 		
 		var cancel:FlxUIButton = new FlxUIButton(0, go.y + 20, "Cancel", cancel);
+		Assets.setBtnGraphic(cancel);
 		add(cancel);
 		FlxSpriteUtil.screenCenter(cancel, true, false);
 	}

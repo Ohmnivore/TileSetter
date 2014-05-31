@@ -22,7 +22,7 @@ class NewProj extends FlxUISubState
 		
 		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0x99000000));
 		
-		var chrome:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 0, null, new Rectangle(0, 0, 400, 200));
+		var chrome:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 0, Assets.CHROME, new Rectangle(0, 0, 400, 200));
 		FlxSpriteUtil.screenCenter(chrome);
 		add(chrome);
 		
@@ -32,10 +32,12 @@ class NewProj extends FlxUISubState
 		inp.text = "Project name";
 		
 		var go:FlxUIButton = new FlxUIButton(0, inp.y + 20, "New project", createNew);
+		Assets.setBtnGraphic(go);
 		add(go);
 		FlxSpriteUtil.screenCenter(go, true, false);
 		
 		var cancel:FlxUIButton = new FlxUIButton(0, go.y + 20, "Cancel", cancel);
+		Assets.setBtnGraphic(cancel);
 		add(cancel);
 		FlxSpriteUtil.screenCenter(cancel, true, false);
 	}

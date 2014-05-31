@@ -45,7 +45,7 @@ class Help extends FlxUIPopup
 		
 		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0x99000000));
 		
-		var chrome:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 0, null, new Rectangle(0, 0, 400, 200));
+		var chrome:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 0, Assets.CHROME, new Rectangle(0, 0, 400, 200));
 		FlxSpriteUtil.screenCenter(chrome);
 		add(chrome);
 		
@@ -55,6 +55,7 @@ class Help extends FlxUIPopup
 		add(t);
 		
 		var ok:FlxUIButton = new FlxUIButton(0, 0, "OK", close);
+		Assets.setBtnGraphic(ok);
 		FlxSpriteUtil.screenCenter(ok, true, false);
 		ok.y = chrome.y + chrome.height - 30;
 		add(ok);
