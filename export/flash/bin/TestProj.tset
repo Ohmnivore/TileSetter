@@ -1,1 +1,1 @@
-[{"name":"Radio","type":"Radio group","opts":["Water","Ice","Option name2"]},{"name":"Property name","type":"Radio group","opts":["Option name","Option name2","Option name3","Option name4"]}]
+[{"name":"Type","opts":["Earth","Water"],"type":"Radio group"},{"name":"Walljump","type":"Checkbox"}]
