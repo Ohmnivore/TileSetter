@@ -10,6 +10,7 @@ import flixel.addons.ui.FlxUISubState;
 import flixel.addons.ui.FlxUIText;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.group.FlxGroup;
 import flixel.util.FlxSpriteUtil;
 import flixel.addons.ui.StrIdLabel;
 import haxe.Constraints.Function;
@@ -24,15 +25,22 @@ class EditProj extends FlxUISubState
 	private var name:FlxUIInputText;
 	private var fieldlist:FlxUIList;
 	
+	private var under:FlxGroup;
+	private var top:FlxGroup;
+	
 	override public function create():Void 
 	{
 		super.create();
 		
 		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0x99000000));
-		
 		var chrome:FlxUI9SliceSprite = new FlxUI9SliceSprite(0, 0, Assets.CHROME, new Rectangle(0, 0, FlxG.width, FlxG.height - 60));
 		FlxSpriteUtil.screenCenter(chrome);
 		add(chrome);
+		
+		under = new FlxGroup();
+		add(under);
+		top = new FlxGroup();
+		add(top);
 		
 		var opt:Array<StrIdLabel> = Reg.makeStrIdArray(["Checkbox", "Textfield", "Radio group"]);
 		type_select = new FlxUIDropDownMenu(10, 40, opt, Assets.createHeader());
@@ -42,18 +50,18 @@ class EditProj extends FlxUISubState
 		name.x = type_select.width + type_select.x;
 		name.y = 43;
 		name.text = "Property name";
-		add(name);
+		top.add(name);
 		
 		var go:FlxUIButton = new FlxUIButton(type_select.x + type_select.width + name.width + 5, 40, "Add", makeNewProp);
 		Assets.setBtnGraphic(go);
-		add(go);
+		top.add(go);
 		
 		var ret:FlxUIButton = new FlxUIButton(type_select.x + type_select.width + name.width + go.width + 5, 40, "Done", cancel);
 		Assets.setBtnGraphic(ret);
-		add(ret);
+		top.add(ret);
 		
 		fieldlist = new FlxUIList(10, 95, null, FlxG.width, (FlxG.height - 95) * 0.75);
-		add(fieldlist);
+		under.add(fieldlist);
 		
 		for (f in Reg.proj.iterator())
 		{

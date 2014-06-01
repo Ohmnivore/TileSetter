@@ -390,9 +390,13 @@ class BasePage extends FlxUIState
 		hud.add(proj3);
 		
 		var tabs = [{ id:"Inspect", label:"Inspect" },
-		{ id:"Apply", label:"Apply" }];
+		{ id:"Apply", label:"Apply" } ];
 		
-		tab = new FlxUITabMenu(null, tabs, true);
+		var tabs_btns:Array<FlxUIButton> = [];
+		tabs_btns.push(Assets.getTab("Inspect"));
+		tabs_btns.push(Assets.getTab("Apply"));
+		
+		tab = new FlxUITabMenu(Assets.getTabBackground(), tabs_btns, tabs, true);
 		
 		tab.y = 28;
 		tab.width = FlxG.width * 0.30;
@@ -738,25 +742,37 @@ class BasePage extends FlxUIState
 		
 		if (TypeOfUI == "Checkbox")
 		{
-			var c:FlxUICheckBox = new FlxUICheckBox(5, g.height + 2, FlxUIAssets.IMG_CHECK_BOX,FlxUIAssets.IMG_CHECK_MARK, Name);
+			var n:FlxUIText = new FlxUIText();
+			n.setBorderStyle(FlxText.BORDER_OUTLINE);
+			n.color = 0xffffffff;
+			n.borderColor = 0xffb82323;
+			n.text = Name;
+			n.x = 5;
+			n.y = g.height + 2;
+			g.add(n);
+			
+			var c:FlxUICheckBox = new FlxUICheckBox(5, g.height + 2, FlxUIAssets.IMG_CHECK_BOX,FlxUIAssets.IMG_CHECK_MARK, "");
 			g.add(c);
+			c.getLabel().setBorderStyle(FlxText.BORDER_OUTLINE);
+			c.getLabel().borderColor = 0xffb82323;
 			toset = c;
 		}
 		
 		if (TypeOfUI == "Textfield")
 		{
+			var n:FlxUIText = new FlxUIText();
+			n.setBorderStyle(FlxText.BORDER_OUTLINE);
+			n.color = 0xffffffff;
+			n.borderColor = 0xffb82323;
+			n.text = Name;
+			n.x = 5;
+			n.y = g.height + 2;
+			g.add(n);
+			
 			var t:FlxUIInputText = new FlxUIInputText();
 			t.x = 5;
 			t.y = g.height + 2;
 			g.add(t);
-			
-			var n:FlxUIText = new FlxUIText();
-			n.color = 0xffffffff;
-			n.borderColor = 0xff000000;
-			n.text = Name;
-			n.x = t.width + 7;
-			n.y = g.height + 2 - t.height;
-			g.add(n);
 			
 			toset = t;
 		}
@@ -764,18 +780,22 @@ class BasePage extends FlxUIState
 		if (TypeOfUI == "Radio group")
 		{
 			var n:FlxUIText = new FlxUIText();
+			n.setBorderStyle(FlxText.BORDER_OUTLINE);
 			n.color = 0xffffffff;
-			n.borderColor = 0xff000000;
+			n.borderColor = 0xffb82323;
 			n.text = Name;
 			n.x = 5;
 			n.y = g.height + 2;
 			g.add(n);
 			
-			var r:FlxUIRadioGroup = new FlxUIRadioGroup(5, g.height, Radio.opts, Radio.opts);
+			var r:FlxUIRadioGroup = new FlxUIRadioGroup(5, g.height + 4, Radio.opts, Radio.opts);
 			//r.height += 20;
 			g.add(r);
 			toset = r;
 		}
+		
+		var spacer:FlxSprite = new FlxSprite(5, g.height + 2).makeGraphic(Std.int(g.width), 14, 0x00000000);
+		g.add(spacer);
 		
 		if (Tab == "Apply")
 			Reg.props.set(Name, toset);

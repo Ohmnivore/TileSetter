@@ -1,5 +1,5 @@
-import openfl.display.Sprite;
-import openfl.events.Event;
+import flash.display.Sprite;
+import flash.events.Event;
 
 
 class NMEPreloader extends Sprite

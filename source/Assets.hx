@@ -1,4 +1,5 @@
 package ;
+import flash.geom.Rectangle;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUIAssets;
 import flixel.addons.ui.FlxUIButton;
@@ -7,6 +8,7 @@ import flixel.addons.ui.FlxUISpriteButton;
 import flixel.addons.ui.FlxUIText;
 import flixel.addons.ui.FlxUITypedButton.FlxUITypedButton;
 import flixel.FlxSprite;
+import flixel.text.FlxText;
 import flixel.util.FlxStringUtil;
 
 /**
@@ -18,11 +20,18 @@ class Assets
 	static public var CHROME:String = "assets/images/chrome.png";
 	static public var BUTTON:String = "assets/images/button.png";
 	static public var BUTTON_THIN:String = "assets/images/button_thin.png";
+	static public var TAB:String = "assets/images/tab.png";
+	static public var TAB_BACK:String = "assets/images/tab_back.png";
 	
 	static public function setBtnGraphic(Btn:FlxUIButton):Void
 	{
 		Btn.loadGraphicSlice9([Assets.BUTTON], 80, 20, []);
-		Btn.label.color = 0xff000000;
+		Btn.label.color = 0xffffffff;
+		Btn.over_color = 0xffffffff;
+		Btn.down_color = 0xffffffff;
+		Btn.up_color = 0xffffffff;
+		Btn.label.setBorderStyle(FlxText.BORDER_OUTLINE);
+		Btn.label.borderColor = 0xff000000;
 	}
 	
 	static public function createHeader(Width:Int = 120):FlxUIDropDownHeader
@@ -51,5 +60,36 @@ class Assets
 		ButtonPlus.label = new FlxSprite(0, 0, FlxUIAssets.IMG_MINUS);
 		
 		return ButtonPlus;
+	}
+	
+	static public function getTabBackground():FlxUI9SliceSprite
+	{
+		return new FlxUI9SliceSprite(0, 0, Assets.CHROME, new Rectangle(0, 0, 200, 200));
+	}
+	
+	static public function getTab(Name:String):FlxUIButton
+	{
+		var fb:FlxUIButton = new FlxUIButton(0, 0, Name);
+		
+		//default style:
+		fb.up_color = 0xffffff;
+		fb.down_color = 0xffffff;
+		fb.over_color = 0xffffff;
+		fb.up_toggle_color = 0xffffff;
+		fb.down_toggle_color = 0xffffff;
+		fb.over_toggle_color = 0xffffff;
+		
+		fb.label.color = 0xFFFFFF;
+		fb.label.setBorderStyle(FlxText.BORDER_OUTLINE);
+		
+		fb.id = Name;
+		
+		//load default graphics
+		var graphic_ids:Array<String> = [Assets.TAB_BACK, Assets.TAB_BACK, Assets.TAB_BACK, Assets.TAB, Assets.TAB, Assets.TAB];
+		var slice9tab:Array<Int> = FlxStringUtil.toIntArray(FlxUIAssets.SLICE9_TAB);
+		var slice9_ids:Array<Array<Int>> = [slice9tab, slice9tab, slice9tab, slice9tab, slice9tab, slice9tab];
+		fb.loadGraphicSlice9(graphic_ids, 0, 0, slice9_ids, FlxUI9SliceSprite.TILE_NONE, -1, true);
+		
+		return fb;
 	}
 }
