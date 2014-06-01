@@ -92,8 +92,8 @@ class Selector extends FlxSprite
 	{
 		var ret:FlxPoint = new FlxPoint();
 		
-		ret.set(Std.int(X / (Reg.sheet.tile_width * zoom)) * Reg.sheet.tile_width * zoom + S.x % (Reg.sheet.tile_width * zoom) - x,
-			Std.int(Y / (Reg.sheet.tile_height  * zoom)) * Reg.sheet.tile_height * zoom + S.y % (Reg.sheet.tile_height * zoom) - y);
+		ret.set(Std.int(X / (Reg.sheet.tile_width* zoom)) * Reg.sheet.tile_width * zoom + S.x % (Reg.sheet.tile_width * zoom) - x,
+			Std.int(Y / (Reg.sheet.tile_height * zoom)) * Reg.sheet.tile_height * zoom + S.y % (Reg.sheet.tile_height * zoom) - y);
 		
 		return ret;
 	}
@@ -111,11 +111,11 @@ class Selector extends FlxSprite
 		{
 			while (x_count < x_limit)
 			{
-				var index:Int = y_count * Std.int((Reg.base.tileset.width * zoom) / (Reg.sheet.tile_width * zoom));
+				var index:Int = y_count * Std.int((Reg.base.tileset.width) / (Reg.sheet.tile_width * zoom));
 				index += x_count;
 				
 				if (index >= 0 &&
-					index < Std.int((Reg.base.tileset.width * zoom) / (Reg.sheet.tile_width * zoom)) * Std.int((Reg.base.tileset.height * zoom) / (Reg.sheet.tile_height * zoom)))
+					index < Std.int((Reg.base.tileset.width) / (Reg.sheet.tile_width * zoom)) * Std.int((Reg.base.tileset.height) / (Reg.sheet.tile_height * zoom)))
 				{
 					ret.push(index);
 				}

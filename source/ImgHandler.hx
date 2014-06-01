@@ -57,6 +57,7 @@ class ImgHandler
 		
 		Reg.image_opened = true;
 		Reg.base.updateNames();
+		Reg.base.selector.zoom = 1;
 	}
 	
 	public function loaderToFlxSprite(L:LoaderInfo):FlxSprite

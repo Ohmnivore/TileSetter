@@ -10,8 +10,10 @@ import haxe.Unserializer;
 class Sheet
 {
 	public var name:String;
-	public var tile_width:Int;
-	public var tile_height:Int;
+	//public var tile_width:Int;
+	//public var tile_height:Int;
+	public var tile_width:Float;
+	public var tile_height:Float;
 	
 	public var brushes:Map<Int, Brush>;
 	public var tiles:Map<Int, Int>;

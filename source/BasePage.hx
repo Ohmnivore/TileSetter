@@ -127,6 +127,11 @@ class BasePage extends FlxUIState
 		
 		if (Reg.sheet != null)
 		{
+			//if (FlxG.keys.justPressed.Y)
+			//{
+				//trace(selector.getSelected());
+			//}
+			
 			if (FlxG.keys.justPressed.E)
 			{
 				var arr:Array<Int> = selector.getSelected();
@@ -472,18 +477,21 @@ class BasePage extends FlxUIState
 	
 	private function zoomIn():Void
 	{
-		tileset.setGraphicSize(Std.int(tileset.width * 1.2), Std.int(tileset.height * 1.2));
-		tileset.setSize(Std.int(tileset.width * 1.2), Std.int(tileset.height * 1.2));
+		tileset.setGraphicSize(Std.int(tileset.width * 2), Std.int(tileset.height * 2));
+		tileset.setSize(Std.int(tileset.width * 2), Std.int(tileset.height * 2));
 		tileset.origin.set();
-		selector.zoom *= 1.2;
+		selector.zoom *= 2;
 	}
 	
 	private function zoomOut():Void
 	{
-		tileset.setGraphicSize(Std.int(tileset.width / 1.2), Std.int(tileset.height / 1.2));
-		tileset.setSize(Std.int(tileset.width / 1.2), Std.int(tileset.height / 1.2));
-		tileset.origin.set();
-		selector.zoom /= 1.2;
+		if (selector.zoom > 0.5)
+		{
+			tileset.setGraphicSize(Std.int(tileset.width / 2), Std.int(tileset.height / 2));
+			tileset.setSize(Std.int(tileset.width / 2), Std.int(tileset.height / 2));
+			tileset.origin.set();
+			selector.zoom /= 2;
+		}
 	}
 	
 	public function showHelp():Void
