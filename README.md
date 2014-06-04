@@ -7,7 +7,9 @@ Written using Haxe, with HaxeFlixel and its library flixel-ui.
 
 #Instructions:
 
-At this stage, to run TileSetter you must open [TileSetter.swf](https://github.com/Ohmnivore/TileSetter/raw/master/export/flash/bin/TileSetter.swf) in a stand-alone flash player (doesn't seem to work in-browser for reasons I don't understand). In the future I plan to fix the browser issue and port it to Neko and native platforms.
+At this stage, to run TileSetter you must open [TileSetter.swf](https://github.com/Ohmnivore/TileSetter/raw/master/export/flash/bin/TileSetter.swf) in a stand-alone flash player (doesn't seem to work in-browser for reasons I don't understand). In the future I plan to fix the browser issue.
+
+Or you can run on a compiled version of TileSetter for Windows (native). [ZIP](https://github.com/Ohmnivore/TileSetter/releases) (Download TileSetter.zip)
 
 
 #Wiki:
