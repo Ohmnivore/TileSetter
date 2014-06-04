@@ -1,1 +1,1 @@
-[{"name":"Type","opts":["Earth","Water"],"type":"Radio group"},{"name":"Walljump","type":"Checkbox"}]
+[{"opts":["Earth","Water"],"name":"Type","type":"Radio group"},{"name":"Walljump","type":"Checkbox"}]

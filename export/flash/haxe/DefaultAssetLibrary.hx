@@ -1,20 +1,26 @@
 package;
 
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.MovieClip;
-import flash.text.Font;
-import flash.media.Sound;
-import flash.net.URLRequest;
-import flash.utils.ByteArray;
+import haxe.Timer;
 import haxe.Unserializer;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.MovieClip;
+import openfl.events.Event;
+import openfl.text.Font;
+import openfl.media.Sound;
+import openfl.net.URLRequest;
+import openfl.utils.ByteArray;
 import openfl.Assets;
 
 #if (flash || js)
-import flash.display.Loader;
-import flash.events.Event;
-import flash.net.URLLoader;
+import openfl.display.Loader;
+import openfl.events.Event;
+import openfl.net.URLLoader;
+#end
+
+#if sys
+import sys.FileSystem;
 #end
 
 #if ios
@@ -22,13 +28,17 @@ import openfl.utils.SystemPath;
 #end
 
 
-@:access(flash.media.Sound)
+@:access(openfl.media.Sound)
 class DefaultAssetLibrary extends AssetLibrary {
 	
 	
-	public static var className (default, null) = new Map <String, Dynamic> ();
-	public static var path (default, null) = new Map <String, String> ();
-	public static var type (default, null) = new Map <String, AssetType> ();
+	public var className (default, null) = new Map <String, Dynamic> ();
+	public var path (default, null) = new Map <String, String> ();
+	public var type (default, null) = new Map <String, AssetType> ();
+	
+	private var lastModified:Float;
+	private var timer:Timer;
+	
 	
 	public function new () {
 		
@@ -37,489 +47,585 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#if flash
 		
 		className.set ("assets/images/background.png", __ASSET__assets_images_background_png);
-		type.set ("assets/images/background.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images/background.png", AssetType.IMAGE);
 		className.set ("assets/images/button.png", __ASSET__assets_images_button_png);
-		type.set ("assets/images/button.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images/button.png", AssetType.IMAGE);
 		className.set ("assets/images/button_thin.png", __ASSET__assets_images_button_thin_png);
-		type.set ("assets/images/button_thin.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images/button_thin.png", AssetType.IMAGE);
 		className.set ("assets/images/chrome.png", __ASSET__assets_images_chrome_png);
-		type.set ("assets/images/chrome.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images/chrome.png", AssetType.IMAGE);
 		className.set ("assets/images/images-go-here.txt", __ASSET__assets_images_images_go_here_txt);
-		type.set ("assets/images/images-go-here.txt", Reflect.field (AssetType, "text".toUpperCase ()));
+		type.set ("assets/images/images-go-here.txt", AssetType.TEXT);
 		className.set ("assets/images/tab.png", __ASSET__assets_images_tab_png);
-		type.set ("assets/images/tab.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images/tab.png", AssetType.IMAGE);
 		className.set ("assets/images/tab_back.png", __ASSET__assets_images_tab_back_png);
-		type.set ("assets/images/tab_back.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images/tab_back.png", AssetType.IMAGE);
 		className.set ("assets/images_source/box.png", __ASSET__assets_images_source_box_png);
-		type.set ("assets/images_source/box.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/box.png", AssetType.IMAGE);
 		className.set ("assets/images_source/button.png", __ASSET__assets_images_source_button_png);
-		type.set ("assets/images_source/button.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/button.png", AssetType.IMAGE);
 		className.set ("assets/images_source/button_arrow_down.png", __ASSET__assets_images_source_button_arrow_down_png);
-		type.set ("assets/images_source/button_arrow_down.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/button_arrow_down.png", AssetType.IMAGE);
 		className.set ("assets/images_source/button_arrow_left.png", __ASSET__assets_images_source_button_arrow_left_png);
-		type.set ("assets/images_source/button_arrow_left.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/button_arrow_left.png", AssetType.IMAGE);
 		className.set ("assets/images_source/button_arrow_right.png", __ASSET__assets_images_source_button_arrow_right_png);
-		type.set ("assets/images_source/button_arrow_right.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/button_arrow_right.png", AssetType.IMAGE);
 		className.set ("assets/images_source/button_arrow_up.png", __ASSET__assets_images_source_button_arrow_up_png);
-		type.set ("assets/images_source/button_arrow_up.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/button_arrow_up.png", AssetType.IMAGE);
 		className.set ("assets/images_source/button_thin.png", __ASSET__assets_images_source_button_thin_png);
-		type.set ("assets/images_source/button_thin.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/button_thin.png", AssetType.IMAGE);
 		className.set ("assets/images_source/button_toggle.png", __ASSET__assets_images_source_button_toggle_png);
-		type.set ("assets/images_source/button_toggle.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/button_toggle.png", AssetType.IMAGE);
 		className.set ("assets/images_source/check_box.png", __ASSET__assets_images_source_check_box_png);
-		type.set ("assets/images_source/check_box.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/check_box.png", AssetType.IMAGE);
 		className.set ("assets/images_source/check_mark.png", __ASSET__assets_images_source_check_mark_png);
-		type.set ("assets/images_source/check_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/check_mark.png", AssetType.IMAGE);
 		className.set ("assets/images_source/chrome.png", __ASSET__assets_images_source_chrome_png);
-		type.set ("assets/images_source/chrome.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/chrome.png", AssetType.IMAGE);
 		className.set ("assets/images_source/chrome_flat.png", __ASSET__assets_images_source_chrome_flat_png);
-		type.set ("assets/images_source/chrome_flat.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/chrome_flat.png", AssetType.IMAGE);
 		className.set ("assets/images_source/chrome_inset.png", __ASSET__assets_images_source_chrome_inset_png);
-		type.set ("assets/images_source/chrome_inset.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/chrome_inset.png", AssetType.IMAGE);
 		className.set ("assets/images_source/chrome_light.png", __ASSET__assets_images_source_chrome_light_png);
-		type.set ("assets/images_source/chrome_light.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/chrome_light.png", AssetType.IMAGE);
 		className.set ("assets/images_source/dropdown_mark.png", __ASSET__assets_images_source_dropdown_mark_png);
-		type.set ("assets/images_source/dropdown_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/dropdown_mark.png", AssetType.IMAGE);
 		className.set ("assets/images_source/finger_big.png", __ASSET__assets_images_source_finger_big_png);
-		type.set ("assets/images_source/finger_big.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/finger_big.png", AssetType.IMAGE);
 		className.set ("assets/images_source/finger_small.png", __ASSET__assets_images_source_finger_small_png);
-		type.set ("assets/images_source/finger_small.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/finger_small.png", AssetType.IMAGE);
 		className.set ("assets/images_source/hilight.png", __ASSET__assets_images_source_hilight_png);
-		type.set ("assets/images_source/hilight.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/hilight.png", AssetType.IMAGE);
 		className.set ("assets/images_source/invis.png", __ASSET__assets_images_source_invis_png);
-		type.set ("assets/images_source/invis.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/invis.png", AssetType.IMAGE);
 		className.set ("assets/images_source/minus_mark.png", __ASSET__assets_images_source_minus_mark_png);
-		type.set ("assets/images_source/minus_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/minus_mark.png", AssetType.IMAGE);
 		className.set ("assets/images_source/plus_mark.png", __ASSET__assets_images_source_plus_mark_png);
-		type.set ("assets/images_source/plus_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/plus_mark.png", AssetType.IMAGE);
 		className.set ("assets/images_source/radio.png", __ASSET__assets_images_source_radio_png);
-		type.set ("assets/images_source/radio.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/radio.png", AssetType.IMAGE);
 		className.set ("assets/images_source/radio_dot.png", __ASSET__assets_images_source_radio_dot_png);
-		type.set ("assets/images_source/radio_dot.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/radio_dot.png", AssetType.IMAGE);
 		className.set ("assets/images_source/swatch.png", __ASSET__assets_images_source_swatch_png);
-		type.set ("assets/images_source/swatch.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/swatch.png", AssetType.IMAGE);
 		className.set ("assets/images_source/tab.png", __ASSET__assets_images_source_tab_png);
-		type.set ("assets/images_source/tab.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/tab.png", AssetType.IMAGE);
 		className.set ("assets/images_source/tab_back.png", __ASSET__assets_images_source_tab_back_png);
-		type.set ("assets/images_source/tab_back.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/tab_back.png", AssetType.IMAGE);
 		className.set ("assets/xml/message_popup.xml", __ASSET__assets_xml_message_popup_xml);
-		type.set ("assets/xml/message_popup.xml", Reflect.field (AssetType, "text".toUpperCase ()));
+		type.set ("assets/xml/message_popup.xml", AssetType.TEXT);
 		className.set ("assets/sounds/beep.mp3", __ASSET__assets_sounds_beep_mp3);
-		type.set ("assets/sounds/beep.mp3", Reflect.field (AssetType, "music".toUpperCase ()));
+		type.set ("assets/sounds/beep.mp3", AssetType.MUSIC);
 		className.set ("assets/sounds/flixel.mp3", __ASSET__assets_sounds_flixel_mp3);
-		type.set ("assets/sounds/flixel.mp3", Reflect.field (AssetType, "music".toUpperCase ()));
+		type.set ("assets/sounds/flixel.mp3", AssetType.MUSIC);
 		className.set ("flixel/flixel-ui/img/box.png", __ASSET__flixel_flixel_ui_img_box_png);
-		type.set ("flixel/flixel-ui/img/box.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/box.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/button.png", __ASSET__flixel_flixel_ui_img_button_png);
-		type.set ("flixel/flixel-ui/img/button.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/button.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/button_arrow_down.png", __ASSET__flixel_flixel_ui_img_button_arrow_down_png);
-		type.set ("flixel/flixel-ui/img/button_arrow_down.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/button_arrow_down.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/button_arrow_left.png", __ASSET__flixel_flixel_ui_img_button_arrow_left_png);
-		type.set ("flixel/flixel-ui/img/button_arrow_left.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/button_arrow_left.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/button_arrow_right.png", __ASSET__flixel_flixel_ui_img_button_arrow_right_png);
-		type.set ("flixel/flixel-ui/img/button_arrow_right.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/button_arrow_right.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/button_arrow_up.png", __ASSET__flixel_flixel_ui_img_button_arrow_up_png);
-		type.set ("flixel/flixel-ui/img/button_arrow_up.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/button_arrow_up.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/button_thin.png", __ASSET__flixel_flixel_ui_img_button_thin_png);
-		type.set ("flixel/flixel-ui/img/button_thin.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/button_thin.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/button_toggle.png", __ASSET__flixel_flixel_ui_img_button_toggle_png);
-		type.set ("flixel/flixel-ui/img/button_toggle.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/button_toggle.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/check_box.png", __ASSET__flixel_flixel_ui_img_check_box_png);
-		type.set ("flixel/flixel-ui/img/check_box.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/check_box.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/check_mark.png", __ASSET__flixel_flixel_ui_img_check_mark_png);
-		type.set ("flixel/flixel-ui/img/check_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/check_mark.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/chrome.png", __ASSET__flixel_flixel_ui_img_chrome_png);
-		type.set ("flixel/flixel-ui/img/chrome.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/chrome.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/chrome_flat.png", __ASSET__flixel_flixel_ui_img_chrome_flat_png);
-		type.set ("flixel/flixel-ui/img/chrome_flat.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/chrome_flat.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/chrome_inset.png", __ASSET__flixel_flixel_ui_img_chrome_inset_png);
-		type.set ("flixel/flixel-ui/img/chrome_inset.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/chrome_inset.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/chrome_light.png", __ASSET__flixel_flixel_ui_img_chrome_light_png);
-		type.set ("flixel/flixel-ui/img/chrome_light.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/chrome_light.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/dropdown_mark.png", __ASSET__flixel_flixel_ui_img_dropdown_mark_png);
-		type.set ("flixel/flixel-ui/img/dropdown_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/dropdown_mark.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/finger_big.png", __ASSET__flixel_flixel_ui_img_finger_big_png);
-		type.set ("flixel/flixel-ui/img/finger_big.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/finger_big.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/finger_small.png", __ASSET__flixel_flixel_ui_img_finger_small_png);
-		type.set ("flixel/flixel-ui/img/finger_small.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/finger_small.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/hilight.png", __ASSET__flixel_flixel_ui_img_hilight_png);
-		type.set ("flixel/flixel-ui/img/hilight.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/hilight.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/invis.png", __ASSET__flixel_flixel_ui_img_invis_png);
-		type.set ("flixel/flixel-ui/img/invis.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/invis.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/minus_mark.png", __ASSET__flixel_flixel_ui_img_minus_mark_png);
-		type.set ("flixel/flixel-ui/img/minus_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/minus_mark.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/plus_mark.png", __ASSET__flixel_flixel_ui_img_plus_mark_png);
-		type.set ("flixel/flixel-ui/img/plus_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/plus_mark.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/radio.png", __ASSET__flixel_flixel_ui_img_radio_png);
-		type.set ("flixel/flixel-ui/img/radio.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/radio.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/radio_dot.png", __ASSET__flixel_flixel_ui_img_radio_dot_png);
-		type.set ("flixel/flixel-ui/img/radio_dot.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/radio_dot.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/swatch.png", __ASSET__flixel_flixel_ui_img_swatch_png);
-		type.set ("flixel/flixel-ui/img/swatch.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/swatch.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/tab.png", __ASSET__flixel_flixel_ui_img_tab_png);
-		type.set ("flixel/flixel-ui/img/tab.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/tab.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/img/tab_back.png", __ASSET__flixel_flixel_ui_img_tab_back_png);
-		type.set ("flixel/flixel-ui/img/tab_back.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/tab_back.png", AssetType.IMAGE);
 		className.set ("flixel/flixel-ui/xml/defaults.xml", __ASSET__flixel_flixel_ui_xml_defaults_xml);
-		type.set ("flixel/flixel-ui/xml/defaults.xml", Reflect.field (AssetType, "text".toUpperCase ()));
+		type.set ("flixel/flixel-ui/xml/defaults.xml", AssetType.TEXT);
 		className.set ("flixel/flixel-ui/xml/default_loading_screen.xml", __ASSET__flixel_flixel_ui_xml_default_loading_screen_xml);
-		type.set ("flixel/flixel-ui/xml/default_loading_screen.xml", Reflect.field (AssetType, "text".toUpperCase ()));
+		type.set ("flixel/flixel-ui/xml/default_loading_screen.xml", AssetType.TEXT);
 		className.set ("flixel/flixel-ui/xml/default_popup.xml", __ASSET__flixel_flixel_ui_xml_default_popup_xml);
-		type.set ("flixel/flixel-ui/xml/default_popup.xml", Reflect.field (AssetType, "text".toUpperCase ()));
+		type.set ("flixel/flixel-ui/xml/default_popup.xml", AssetType.TEXT);
 		
 		
 		#elseif html5
 		
-		addExternal("assets/images/background.png", "image", "assets/images/background.png");
-		addExternal("assets/images/button.png", "image", "assets/images/button.png");
-		addExternal("assets/images/button_thin.png", "image", "assets/images/button_thin.png");
-		addExternal("assets/images/chrome.png", "image", "assets/images/chrome.png");
-		addExternal("assets/images/images-go-here.txt", "text", "assets/images/images-go-here.txt");
-		addExternal("assets/images/tab.png", "image", "assets/images/tab.png");
-		addExternal("assets/images/tab_back.png", "image", "assets/images/tab_back.png");
-		addExternal("assets/images_source/box.png", "image", "assets/images_source/box.png");
-		addExternal("assets/images_source/button.png", "image", "assets/images_source/button.png");
-		addExternal("assets/images_source/button_arrow_down.png", "image", "assets/images_source/button_arrow_down.png");
-		addExternal("assets/images_source/button_arrow_left.png", "image", "assets/images_source/button_arrow_left.png");
-		addExternal("assets/images_source/button_arrow_right.png", "image", "assets/images_source/button_arrow_right.png");
-		addExternal("assets/images_source/button_arrow_up.png", "image", "assets/images_source/button_arrow_up.png");
-		addExternal("assets/images_source/button_thin.png", "image", "assets/images_source/button_thin.png");
-		addExternal("assets/images_source/button_toggle.png", "image", "assets/images_source/button_toggle.png");
-		addExternal("assets/images_source/check_box.png", "image", "assets/images_source/check_box.png");
-		addExternal("assets/images_source/check_mark.png", "image", "assets/images_source/check_mark.png");
-		addExternal("assets/images_source/chrome.png", "image", "assets/images_source/chrome.png");
-		addExternal("assets/images_source/chrome_flat.png", "image", "assets/images_source/chrome_flat.png");
-		addExternal("assets/images_source/chrome_inset.png", "image", "assets/images_source/chrome_inset.png");
-		addExternal("assets/images_source/chrome_light.png", "image", "assets/images_source/chrome_light.png");
-		addExternal("assets/images_source/dropdown_mark.png", "image", "assets/images_source/dropdown_mark.png");
-		addExternal("assets/images_source/finger_big.png", "image", "assets/images_source/finger_big.png");
-		addExternal("assets/images_source/finger_small.png", "image", "assets/images_source/finger_small.png");
-		addExternal("assets/images_source/hilight.png", "image", "assets/images_source/hilight.png");
-		addExternal("assets/images_source/invis.png", "image", "assets/images_source/invis.png");
-		addExternal("assets/images_source/minus_mark.png", "image", "assets/images_source/minus_mark.png");
-		addExternal("assets/images_source/plus_mark.png", "image", "assets/images_source/plus_mark.png");
-		addExternal("assets/images_source/radio.png", "image", "assets/images_source/radio.png");
-		addExternal("assets/images_source/radio_dot.png", "image", "assets/images_source/radio_dot.png");
-		addExternal("assets/images_source/swatch.png", "image", "assets/images_source/swatch.png");
-		addExternal("assets/images_source/tab.png", "image", "assets/images_source/tab.png");
-		addExternal("assets/images_source/tab_back.png", "image", "assets/images_source/tab_back.png");
-		addExternal("assets/xml/message_popup.xml", "text", "assets/xml/message_popup.xml");
-		addExternal("assets/sounds/beep.mp3", "music", "assets/sounds/beep.mp3");
-		addExternal("assets/sounds/flixel.mp3", "music", "assets/sounds/flixel.mp3");
-		addExternal("flixel/flixel-ui/img/box.png", "image", "flixel/flixel-ui/img/box.png");
-		addExternal("flixel/flixel-ui/img/button.png", "image", "flixel/flixel-ui/img/button.png");
-		addExternal("flixel/flixel-ui/img/button_arrow_down.png", "image", "flixel/flixel-ui/img/button_arrow_down.png");
-		addExternal("flixel/flixel-ui/img/button_arrow_left.png", "image", "flixel/flixel-ui/img/button_arrow_left.png");
-		addExternal("flixel/flixel-ui/img/button_arrow_right.png", "image", "flixel/flixel-ui/img/button_arrow_right.png");
-		addExternal("flixel/flixel-ui/img/button_arrow_up.png", "image", "flixel/flixel-ui/img/button_arrow_up.png");
-		addExternal("flixel/flixel-ui/img/button_thin.png", "image", "flixel/flixel-ui/img/button_thin.png");
-		addExternal("flixel/flixel-ui/img/button_toggle.png", "image", "flixel/flixel-ui/img/button_toggle.png");
-		addExternal("flixel/flixel-ui/img/check_box.png", "image", "flixel/flixel-ui/img/check_box.png");
-		addExternal("flixel/flixel-ui/img/check_mark.png", "image", "flixel/flixel-ui/img/check_mark.png");
-		addExternal("flixel/flixel-ui/img/chrome.png", "image", "flixel/flixel-ui/img/chrome.png");
-		addExternal("flixel/flixel-ui/img/chrome_flat.png", "image", "flixel/flixel-ui/img/chrome_flat.png");
-		addExternal("flixel/flixel-ui/img/chrome_inset.png", "image", "flixel/flixel-ui/img/chrome_inset.png");
-		addExternal("flixel/flixel-ui/img/chrome_light.png", "image", "flixel/flixel-ui/img/chrome_light.png");
-		addExternal("flixel/flixel-ui/img/dropdown_mark.png", "image", "flixel/flixel-ui/img/dropdown_mark.png");
-		addExternal("flixel/flixel-ui/img/finger_big.png", "image", "flixel/flixel-ui/img/finger_big.png");
-		addExternal("flixel/flixel-ui/img/finger_small.png", "image", "flixel/flixel-ui/img/finger_small.png");
-		addExternal("flixel/flixel-ui/img/hilight.png", "image", "flixel/flixel-ui/img/hilight.png");
-		addExternal("flixel/flixel-ui/img/invis.png", "image", "flixel/flixel-ui/img/invis.png");
-		addExternal("flixel/flixel-ui/img/minus_mark.png", "image", "flixel/flixel-ui/img/minus_mark.png");
-		addExternal("flixel/flixel-ui/img/plus_mark.png", "image", "flixel/flixel-ui/img/plus_mark.png");
-		addExternal("flixel/flixel-ui/img/radio.png", "image", "flixel/flixel-ui/img/radio.png");
-		addExternal("flixel/flixel-ui/img/radio_dot.png", "image", "flixel/flixel-ui/img/radio_dot.png");
-		addExternal("flixel/flixel-ui/img/swatch.png", "image", "flixel/flixel-ui/img/swatch.png");
-		addExternal("flixel/flixel-ui/img/tab.png", "image", "flixel/flixel-ui/img/tab.png");
-		addExternal("flixel/flixel-ui/img/tab_back.png", "image", "flixel/flixel-ui/img/tab_back.png");
-		addExternal("flixel/flixel-ui/xml/defaults.xml", "text", "flixel/flixel-ui/xml/defaults.xml");
-		addExternal("flixel/flixel-ui/xml/default_loading_screen.xml", "text", "flixel/flixel-ui/xml/default_loading_screen.xml");
-		addExternal("flixel/flixel-ui/xml/default_popup.xml", "text", "flixel/flixel-ui/xml/default_popup.xml");
+		var id;
+		id = "assets/images/background.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images/button.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images/button_thin.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images/chrome.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images/images-go-here.txt";
+		path.set (id, id);
+		type.set (id, AssetType.TEXT);
+		id = "assets/images/tab.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images/tab_back.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/box.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/button.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/button_arrow_down.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/button_arrow_left.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/button_arrow_right.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/button_arrow_up.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/button_thin.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/button_toggle.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/check_box.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/check_mark.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/chrome.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/chrome_flat.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/chrome_inset.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/chrome_light.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/dropdown_mark.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/finger_big.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/finger_small.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/hilight.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/invis.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/minus_mark.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/plus_mark.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/radio.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/radio_dot.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/swatch.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/tab.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images_source/tab_back.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/xml/message_popup.xml";
+		path.set (id, id);
+		type.set (id, AssetType.TEXT);
+		id = "assets/sounds/beep.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "assets/sounds/flixel.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "flixel/flixel-ui/img/box.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/button.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/button_arrow_down.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/button_arrow_left.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/button_arrow_right.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/button_arrow_up.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/button_thin.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/button_toggle.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/check_box.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/check_mark.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/chrome.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/chrome_flat.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/chrome_inset.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/chrome_light.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/dropdown_mark.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/finger_big.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/finger_small.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/hilight.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/invis.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/minus_mark.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/plus_mark.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/radio.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/radio_dot.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/swatch.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/tab.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/img/tab_back.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "flixel/flixel-ui/xml/defaults.xml";
+		path.set (id, id);
+		type.set (id, AssetType.TEXT);
+		id = "flixel/flixel-ui/xml/default_loading_screen.xml";
+		path.set (id, id);
+		type.set (id, AssetType.TEXT);
+		id = "flixel/flixel-ui/xml/default_popup.xml";
+		path.set (id, id);
+		type.set (id, AssetType.TEXT);
 		
 		
 		#else
 		
 		#if (windows || mac || linux)
 		
-		var loadManifest = false;
+		var useManifest = false;
 		
 		className.set ("assets/images/background.png", __ASSET__assets_images_background_png);
-		type.set ("assets/images/background.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images/background.png", AssetType.IMAGE);
 		
 		className.set ("assets/images/button.png", __ASSET__assets_images_button_png);
-		type.set ("assets/images/button.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images/button.png", AssetType.IMAGE);
 		
 		className.set ("assets/images/button_thin.png", __ASSET__assets_images_button_thin_png);
-		type.set ("assets/images/button_thin.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images/button_thin.png", AssetType.IMAGE);
 		
 		className.set ("assets/images/chrome.png", __ASSET__assets_images_chrome_png);
-		type.set ("assets/images/chrome.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images/chrome.png", AssetType.IMAGE);
 		
 		className.set ("assets/images/images-go-here.txt", __ASSET__assets_images_images_go_here_txt);
-		type.set ("assets/images/images-go-here.txt", Reflect.field (AssetType, "text".toUpperCase ()));
+		type.set ("assets/images/images-go-here.txt", AssetType.TEXT);
 		
 		className.set ("assets/images/tab.png", __ASSET__assets_images_tab_png);
-		type.set ("assets/images/tab.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images/tab.png", AssetType.IMAGE);
 		
 		className.set ("assets/images/tab_back.png", __ASSET__assets_images_tab_back_png);
-		type.set ("assets/images/tab_back.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images/tab_back.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/box.png", __ASSET__assets_images_source_box_png);
-		type.set ("assets/images_source/box.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/box.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/button.png", __ASSET__assets_images_source_button_png);
-		type.set ("assets/images_source/button.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/button.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/button_arrow_down.png", __ASSET__assets_images_source_button_arrow_down_png);
-		type.set ("assets/images_source/button_arrow_down.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/button_arrow_down.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/button_arrow_left.png", __ASSET__assets_images_source_button_arrow_left_png);
-		type.set ("assets/images_source/button_arrow_left.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/button_arrow_left.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/button_arrow_right.png", __ASSET__assets_images_source_button_arrow_right_png);
-		type.set ("assets/images_source/button_arrow_right.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/button_arrow_right.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/button_arrow_up.png", __ASSET__assets_images_source_button_arrow_up_png);
-		type.set ("assets/images_source/button_arrow_up.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/button_arrow_up.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/button_thin.png", __ASSET__assets_images_source_button_thin_png);
-		type.set ("assets/images_source/button_thin.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/button_thin.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/button_toggle.png", __ASSET__assets_images_source_button_toggle_png);
-		type.set ("assets/images_source/button_toggle.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/button_toggle.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/check_box.png", __ASSET__assets_images_source_check_box_png);
-		type.set ("assets/images_source/check_box.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/check_box.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/check_mark.png", __ASSET__assets_images_source_check_mark_png);
-		type.set ("assets/images_source/check_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/check_mark.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/chrome.png", __ASSET__assets_images_source_chrome_png);
-		type.set ("assets/images_source/chrome.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/chrome.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/chrome_flat.png", __ASSET__assets_images_source_chrome_flat_png);
-		type.set ("assets/images_source/chrome_flat.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/chrome_flat.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/chrome_inset.png", __ASSET__assets_images_source_chrome_inset_png);
-		type.set ("assets/images_source/chrome_inset.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/chrome_inset.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/chrome_light.png", __ASSET__assets_images_source_chrome_light_png);
-		type.set ("assets/images_source/chrome_light.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/chrome_light.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/dropdown_mark.png", __ASSET__assets_images_source_dropdown_mark_png);
-		type.set ("assets/images_source/dropdown_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/dropdown_mark.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/finger_big.png", __ASSET__assets_images_source_finger_big_png);
-		type.set ("assets/images_source/finger_big.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/finger_big.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/finger_small.png", __ASSET__assets_images_source_finger_small_png);
-		type.set ("assets/images_source/finger_small.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/finger_small.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/hilight.png", __ASSET__assets_images_source_hilight_png);
-		type.set ("assets/images_source/hilight.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/hilight.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/invis.png", __ASSET__assets_images_source_invis_png);
-		type.set ("assets/images_source/invis.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/invis.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/minus_mark.png", __ASSET__assets_images_source_minus_mark_png);
-		type.set ("assets/images_source/minus_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/minus_mark.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/plus_mark.png", __ASSET__assets_images_source_plus_mark_png);
-		type.set ("assets/images_source/plus_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/plus_mark.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/radio.png", __ASSET__assets_images_source_radio_png);
-		type.set ("assets/images_source/radio.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/radio.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/radio_dot.png", __ASSET__assets_images_source_radio_dot_png);
-		type.set ("assets/images_source/radio_dot.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/radio_dot.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/swatch.png", __ASSET__assets_images_source_swatch_png);
-		type.set ("assets/images_source/swatch.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/swatch.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/tab.png", __ASSET__assets_images_source_tab_png);
-		type.set ("assets/images_source/tab.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/tab.png", AssetType.IMAGE);
 		
 		className.set ("assets/images_source/tab_back.png", __ASSET__assets_images_source_tab_back_png);
-		type.set ("assets/images_source/tab_back.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("assets/images_source/tab_back.png", AssetType.IMAGE);
 		
 		className.set ("assets/xml/message_popup.xml", __ASSET__assets_xml_message_popup_xml);
-		type.set ("assets/xml/message_popup.xml", Reflect.field (AssetType, "text".toUpperCase ()));
+		type.set ("assets/xml/message_popup.xml", AssetType.TEXT);
 		
 		className.set ("assets/sounds/beep.mp3", __ASSET__assets_sounds_beep_mp3);
-		type.set ("assets/sounds/beep.mp3", Reflect.field (AssetType, "music".toUpperCase ()));
+		type.set ("assets/sounds/beep.mp3", AssetType.MUSIC);
 		
 		className.set ("assets/sounds/flixel.mp3", __ASSET__assets_sounds_flixel_mp3);
-		type.set ("assets/sounds/flixel.mp3", Reflect.field (AssetType, "music".toUpperCase ()));
+		type.set ("assets/sounds/flixel.mp3", AssetType.MUSIC);
 		
 		className.set ("flixel/flixel-ui/img/box.png", __ASSET__flixel_flixel_ui_img_box_png);
-		type.set ("flixel/flixel-ui/img/box.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/box.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/button.png", __ASSET__flixel_flixel_ui_img_button_png);
-		type.set ("flixel/flixel-ui/img/button.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/button.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/button_arrow_down.png", __ASSET__flixel_flixel_ui_img_button_arrow_down_png);
-		type.set ("flixel/flixel-ui/img/button_arrow_down.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/button_arrow_down.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/button_arrow_left.png", __ASSET__flixel_flixel_ui_img_button_arrow_left_png);
-		type.set ("flixel/flixel-ui/img/button_arrow_left.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/button_arrow_left.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/button_arrow_right.png", __ASSET__flixel_flixel_ui_img_button_arrow_right_png);
-		type.set ("flixel/flixel-ui/img/button_arrow_right.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/button_arrow_right.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/button_arrow_up.png", __ASSET__flixel_flixel_ui_img_button_arrow_up_png);
-		type.set ("flixel/flixel-ui/img/button_arrow_up.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/button_arrow_up.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/button_thin.png", __ASSET__flixel_flixel_ui_img_button_thin_png);
-		type.set ("flixel/flixel-ui/img/button_thin.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/button_thin.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/button_toggle.png", __ASSET__flixel_flixel_ui_img_button_toggle_png);
-		type.set ("flixel/flixel-ui/img/button_toggle.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/button_toggle.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/check_box.png", __ASSET__flixel_flixel_ui_img_check_box_png);
-		type.set ("flixel/flixel-ui/img/check_box.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/check_box.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/check_mark.png", __ASSET__flixel_flixel_ui_img_check_mark_png);
-		type.set ("flixel/flixel-ui/img/check_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/check_mark.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/chrome.png", __ASSET__flixel_flixel_ui_img_chrome_png);
-		type.set ("flixel/flixel-ui/img/chrome.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/chrome.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/chrome_flat.png", __ASSET__flixel_flixel_ui_img_chrome_flat_png);
-		type.set ("flixel/flixel-ui/img/chrome_flat.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/chrome_flat.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/chrome_inset.png", __ASSET__flixel_flixel_ui_img_chrome_inset_png);
-		type.set ("flixel/flixel-ui/img/chrome_inset.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/chrome_inset.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/chrome_light.png", __ASSET__flixel_flixel_ui_img_chrome_light_png);
-		type.set ("flixel/flixel-ui/img/chrome_light.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/chrome_light.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/dropdown_mark.png", __ASSET__flixel_flixel_ui_img_dropdown_mark_png);
-		type.set ("flixel/flixel-ui/img/dropdown_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/dropdown_mark.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/finger_big.png", __ASSET__flixel_flixel_ui_img_finger_big_png);
-		type.set ("flixel/flixel-ui/img/finger_big.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/finger_big.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/finger_small.png", __ASSET__flixel_flixel_ui_img_finger_small_png);
-		type.set ("flixel/flixel-ui/img/finger_small.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/finger_small.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/hilight.png", __ASSET__flixel_flixel_ui_img_hilight_png);
-		type.set ("flixel/flixel-ui/img/hilight.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/hilight.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/invis.png", __ASSET__flixel_flixel_ui_img_invis_png);
-		type.set ("flixel/flixel-ui/img/invis.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/invis.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/minus_mark.png", __ASSET__flixel_flixel_ui_img_minus_mark_png);
-		type.set ("flixel/flixel-ui/img/minus_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/minus_mark.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/plus_mark.png", __ASSET__flixel_flixel_ui_img_plus_mark_png);
-		type.set ("flixel/flixel-ui/img/plus_mark.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/plus_mark.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/radio.png", __ASSET__flixel_flixel_ui_img_radio_png);
-		type.set ("flixel/flixel-ui/img/radio.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/radio.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/radio_dot.png", __ASSET__flixel_flixel_ui_img_radio_dot_png);
-		type.set ("flixel/flixel-ui/img/radio_dot.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/radio_dot.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/swatch.png", __ASSET__flixel_flixel_ui_img_swatch_png);
-		type.set ("flixel/flixel-ui/img/swatch.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/swatch.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/tab.png", __ASSET__flixel_flixel_ui_img_tab_png);
-		type.set ("flixel/flixel-ui/img/tab.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/tab.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/img/tab_back.png", __ASSET__flixel_flixel_ui_img_tab_back_png);
-		type.set ("flixel/flixel-ui/img/tab_back.png", Reflect.field (AssetType, "image".toUpperCase ()));
+		type.set ("flixel/flixel-ui/img/tab_back.png", AssetType.IMAGE);
 		
 		className.set ("flixel/flixel-ui/xml/defaults.xml", __ASSET__flixel_flixel_ui_xml_defaults_xml);
-		type.set ("flixel/flixel-ui/xml/defaults.xml", Reflect.field (AssetType, "text".toUpperCase ()));
+		type.set ("flixel/flixel-ui/xml/defaults.xml", AssetType.TEXT);
 		
 		className.set ("flixel/flixel-ui/xml/default_loading_screen.xml", __ASSET__flixel_flixel_ui_xml_default_loading_screen_xml);
-		type.set ("flixel/flixel-ui/xml/default_loading_screen.xml", Reflect.field (AssetType, "text".toUpperCase ()));
+		type.set ("flixel/flixel-ui/xml/default_loading_screen.xml", AssetType.TEXT);
 		
 		className.set ("flixel/flixel-ui/xml/default_popup.xml", __ASSET__flixel_flixel_ui_xml_default_popup_xml);
-		type.set ("flixel/flixel-ui/xml/default_popup.xml", Reflect.field (AssetType, "text".toUpperCase ()));
+		type.set ("flixel/flixel-ui/xml/default_popup.xml", AssetType.TEXT);
 		
+		
+		if (useManifest) {
+			
+			loadManifest ();
+			
+			if (Sys.args ().indexOf ("-livereload") > -1) {
+				
+				var path = FileSystem.fullPath ("manifest");
+				lastModified = FileSystem.stat (path).mtime.getTime ();
+				
+				timer = new Timer (2000);
+				timer.run = function () {
+					
+					var modified = FileSystem.stat (path).mtime.getTime ();
+					
+					if (modified > lastModified) {
+						
+						lastModified = modified;
+						loadManifest ();
+						
+						if (eventCallback != null) {
+							
+							eventCallback (this, "change");
+							
+						}
+						
+					}
+					
+				}
+				
+			}
+			
+		}
 		
 		#else
 		
-		var loadManifest = true;
+		loadManifest ();
 		
 		#end
-		
-		if (loadManifest) {
-			try {
-				
-				#if blackberry
-				var bytes = ByteArray.readFile ("app/native/manifest");
-				#elseif tizen
-				var bytes = ByteArray.readFile ("../res/manifest");
-				#elseif emscripten
-				var bytes = ByteArray.readFile ("assets/manifest");
-				#else
-				var bytes = ByteArray.readFile ("manifest");
-				#end
-				
-				if (bytes != null) {
-					
-					bytes.position = 0;
-					
-					if (bytes.length > 0) {
-						
-						var data = bytes.readUTFBytes (bytes.length);
-						
-						if (data != null && data.length > 0) {
-							
-							var manifest:Array<AssetData> = Unserializer.run (data);
-							
-							for (asset in manifest) {
-								
-								if (!className.exists(asset.id)) {
-									
-									path.set (asset.id, asset.path);
-									type.set (asset.id, asset.type);
-									
-								}
-							}
-						
-						}
-					
-					}
-				
-				} else {
-				
-					trace ("Warning: Could not load asset manifest");
-				
-				}
-			
-			} catch (e:Dynamic) {
-			
-				trace ("Warning: Could not load asset manifest");
-			
-			}
-		
-		}
-		
 		#end
 		
 	}
-	
-	
-	#if html5
-	private function addEmbed(id:String, kind:String, value:Dynamic):Void {
-		className.set(id, value);
-		type.set(id, Reflect.field(AssetType, kind.toUpperCase()));
-	}
-	
-	
-	private function addExternal(id:String, kind:String, value:String):Void {
-		path.set(id, value);
-		type.set(id, Reflect.field(AssetType, kind.toUpperCase()));
-	}
-	#end
 	
 	
 	public override function exists (id:String, type:AssetType):Bool {
 		
-		var assetType = DefaultAssetLibrary.type.get (id);
+		var assetType = this.type.get (id);
 		
 		#if pixi
 		
@@ -602,19 +708,11 @@ class DefaultAssetLibrary extends AssetLibrary {
 	
 	public override function getBytes (id:String):ByteArray {
 		
-		#if pixi
-		
-		return null;
-		
-		#elseif (flash)
+		#if (flash)
 		
 		return cast (Type.createInstance (className.get (id), []), ByteArray);
-		
-		#elseif openfl_html5
-		
-		return null;
-		
-		#elseif js
+
+		#elseif (js || openfl_html5 || pixi)
 		
 		var bytes:ByteArray = null;
 		var data = ApplicationMain.urlLoaders.get (path.get (id)).data;
@@ -814,6 +912,25 @@ class DefaultAssetLibrary extends AssetLibrary {
 	}
 	
 	
+	public override function list (type:AssetType):Array<String> {
+		
+		var items = [];
+		
+		for (id in this.type.keys ()) {
+			
+			if (type == null || exists (id, type)) {
+				
+				items.push (id);
+				
+			}
+			
+		}
+		
+		return items;
+		
+	}
+	
+	
 	public override function loadBitmapData (id:String, handler:BitmapData -> Void):Void {
 		
 		#if pixi
@@ -911,6 +1028,64 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#end
 		
 	}
+	
+	
+	#if (!flash && !html5)
+	private function loadManifest ():Void {
+		
+		try {
+			
+			#if blackberry
+			var bytes = ByteArray.readFile ("app/native/manifest");
+			#elseif tizen
+			var bytes = ByteArray.readFile ("../res/manifest");
+			#elseif emscripten
+			var bytes = ByteArray.readFile ("assets/manifest");
+			#else
+			var bytes = ByteArray.readFile ("manifest");
+			#end
+			
+			if (bytes != null) {
+				
+				bytes.position = 0;
+				
+				if (bytes.length > 0) {
+					
+					var data = bytes.readUTFBytes (bytes.length);
+					
+					if (data != null && data.length > 0) {
+						
+						var manifest:Array<Dynamic> = Unserializer.run (data);
+						
+						for (asset in manifest) {
+							
+							if (!className.exists (asset.id)) {
+								
+								path.set (asset.id, asset.path);
+								type.set (asset.id, Type.createEnum (AssetType, asset.type));
+								
+							}
+							
+						}
+						
+					}
+					
+				}
+				
+			} else {
+				
+				trace ("Warning: Could not load asset manifest (bytes was null)");
+				
+			}
+		
+		} catch (e:Dynamic) {
+			
+			trace ('Warning: Could not load asset manifest (${e})');
+			
+		}
+		
+	}
+	#end
 	
 	
 	public override function loadMusic (id:String, handler:Sound -> Void):Void {
@@ -1024,7 +1199,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep class __ASSET__assets_images_button_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__assets_images_button_thin_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__assets_images_chrome_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
-@:keep class __ASSET__assets_images_images_go_here_txt extends flash.utils.ByteArray { }
+@:keep class __ASSET__assets_images_images_go_here_txt extends openfl.utils.ByteArray { }
 @:keep class __ASSET__assets_images_tab_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__assets_images_tab_back_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__assets_images_source_box_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -1053,9 +1228,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep class __ASSET__assets_images_source_swatch_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__assets_images_source_tab_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__assets_images_source_tab_back_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
-@:keep class __ASSET__assets_xml_message_popup_xml extends flash.utils.ByteArray { }
-@:keep class __ASSET__assets_sounds_beep_mp3 extends flash.media.Sound { }
-@:keep class __ASSET__assets_sounds_flixel_mp3 extends flash.media.Sound { }
+@:keep class __ASSET__assets_xml_message_popup_xml extends openfl.utils.ByteArray { }
+@:keep class __ASSET__assets_sounds_beep_mp3 extends openfl.media.Sound { }
+@:keep class __ASSET__assets_sounds_flixel_mp3 extends openfl.media.Sound { }
 @:keep class __ASSET__flixel_flixel_ui_img_box_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__flixel_flixel_ui_img_button_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__flixel_flixel_ui_img_button_arrow_down_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -1082,9 +1257,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep class __ASSET__flixel_flixel_ui_img_swatch_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__flixel_flixel_ui_img_tab_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__flixel_flixel_ui_img_tab_back_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
-@:keep class __ASSET__flixel_flixel_ui_xml_defaults_xml extends flash.utils.ByteArray { }
-@:keep class __ASSET__flixel_flixel_ui_xml_default_loading_screen_xml extends flash.utils.ByteArray { }
-@:keep class __ASSET__flixel_flixel_ui_xml_default_popup_xml extends flash.utils.ByteArray { }
+@:keep class __ASSET__flixel_flixel_ui_xml_defaults_xml extends openfl.utils.ByteArray { }
+@:keep class __ASSET__flixel_flixel_ui_xml_default_loading_screen_xml extends openfl.utils.ByteArray { }
+@:keep class __ASSET__flixel_flixel_ui_xml_default_popup_xml extends openfl.utils.ByteArray { }
 
 
 #elseif html5
@@ -1193,8 +1368,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:bitmap("assets/images_source/tab.png") class __ASSET__assets_images_source_tab_png extends flash.display.BitmapData {}
 @:bitmap("assets/images_source/tab_back.png") class __ASSET__assets_images_source_tab_back_png extends flash.display.BitmapData {}
 @:file("assets/xml/message_popup.xml") class __ASSET__assets_xml_message_popup_xml extends flash.utils.ByteArray {}
-@:sound("C:/HaxeToolkit/haxe/lib/flixel/3,3,3/assets/sounds/beep.mp3") class __ASSET__assets_sounds_beep_mp3 extends flash.media.Sound {}
-@:sound("C:/HaxeToolkit/haxe/lib/flixel/3,3,3/assets/sounds/flixel.mp3") class __ASSET__assets_sounds_flixel_mp3 extends flash.media.Sound {}
+@:sound("C:/HaxeToolkit/haxe/lib/flixel/3,3,4/assets/sounds/beep.mp3") class __ASSET__assets_sounds_beep_mp3 extends flash.media.Sound {}
+@:sound("C:/HaxeToolkit/haxe/lib/flixel/3,3,4/assets/sounds/flixel.mp3") class __ASSET__assets_sounds_flixel_mp3 extends flash.media.Sound {}
 @:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/box.png") class __ASSET__flixel_flixel_ui_img_box_png extends flash.display.BitmapData {}
 @:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/button.png") class __ASSET__flixel_flixel_ui_img_button_png extends flash.display.BitmapData {}
 @:bitmap("C:/HaxeToolkit/haxe/lib/flixel-ui/git/assets/images/button_arrow_down.png") class __ASSET__flixel_flixel_ui_img_button_arrow_down_png extends flash.display.BitmapData {}

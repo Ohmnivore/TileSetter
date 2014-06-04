@@ -1,7 +1,9 @@
 -main ApplicationMain 
--cp C:\HaxeToolkit\haxe\lib\flixel-addons/1,1,0/
+-cp C:\HaxeToolkit\haxe\lib\systools/1,1,0/
+-D systools=1.1.0
+-cp C:\HaxeToolkit\haxe\lib\flixel-addons/git/
 -D flixel-addons=1.1.0
--cp C:\HaxeToolkit\haxe\lib\flixel-ui/1,0,2/
+-cp C:\HaxeToolkit\haxe\lib\flixel-ui/git/
 -D flixel-ui=1.0.2
 -cp C:\HaxeToolkit\haxe\lib\openfl/2,0,0/
 -D openfl=2.0.0

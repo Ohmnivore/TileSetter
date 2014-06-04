@@ -1,6 +1,9 @@
 package ;
 import flash.geom.Rectangle;
+#if flash
 import flash.net.FileReference;
+#else
+#end
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUIAssets;
@@ -539,7 +542,11 @@ class BasePage extends FlxUIState
 			case "New project":
 				openSubState(new NewProj());
 			case "Open project":
+				#if flash
 				FileHandler.openProj(new FileReference(), loadProject);
+				#else
+				FileHandler.openProj("", loadProject);
+				#end
 			case "Edit project":
 				if (Reg.proj == null)
 				{
@@ -635,7 +642,11 @@ class BasePage extends FlxUIState
 					openSubState(new NewSheet());
 					
 				case "Open sheet":
+					#if flash
 					FileHandler.openSheet(new FileReference(), loadSheet);
+					#else
+					FileHandler.openSheet("", loadSheet);
+					#end
 					
 				case "Save sheet":
 					if (Reg.sheet == null)

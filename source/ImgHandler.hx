@@ -1,12 +1,26 @@
 package ;
 import flash.display.BitmapData;
-import flash.display.Loader;
-import flash.display.LoaderInfo;
+import openfl.display.Loader;
+import openfl.display.LoaderInfo;
 import flash.events.Event;
-import flash.net.FileReference;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 import flixel.addons.display.FlxGridOverlay;
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxSpriteUtil;
+import haxe.io.Bytes;
+import openfl.net.URLLoader;
+import openfl.net.URLRequest;
+import openfl.display.Loader;
+import flixel.util.loaders.CachedGraphics;
+
+#if flash
+import flash.net.FileReference;
+#else
+import sys.io.File;
+import systools.Dialogs;
+#end
 
 /**
  * ...
@@ -14,29 +28,53 @@ import flixel.util.FlxSpriteUtil;
  */
 class ImgHandler
 {
+	#if flash
 	public var seek:FileReference;
+	#else
+	public var seek:URLLoader;
+	#end
 	public var s:BasePage;
 	
 	public function new()
 	{
 		s = Reg.base;
 		
+		#if flash
 		seek = new FileReference();
 		seek.addEventListener(Event.SELECT, onSelect);
 		seek.browse();
+		#else
+		var opts:FILEFILTERS = { count: 1, descriptions: ["Image file"], extensions: ["*.*"] };
+		var selected:Array<String> = Dialogs.openFile("Open image", "", opts);
+		if (selected.length > 0)
+		{
+			var path:String = selected[0];
+			
+			var l:Loader = new Loader();
+			l.contentLoaderInfo.addEventListener(Event.COMPLETE, loadBytesHandler);
+			//l.loadBytes(cast File.getBytes(path));
+			l.load(new URLRequest(path));
+		}
+		#end
 	}
 	
 	private function onSelect(e:Dynamic):Void
 	{
+		#if flash
 		seek.load();
 		seek.addEventListener(Event.COMPLETE, onComplete);
+		#else
+		#end
 	}
 	
 	private function onComplete(e:Dynamic):Void
 	{
+		#if flash
 		var l:Loader = new Loader();
 		l.contentLoaderInfo.addEventListener(Event.COMPLETE, loadBytesHandler);
 		l.loadBytes(seek.data);
+		#else
+		#end
 	}
 	
 	private function loadBytesHandler(event:Event):Void
@@ -53,7 +91,11 @@ class ImgHandler
 		
 		FlxSpriteUtil.screenCenter(s.tileset, true, true);
 		
+		#if flash
 		Reg.image_name = seek.name;
+		#else
+		Reg.image_name = "Unfinished feature";
+		#end
 		
 		Reg.image_opened = true;
 		Reg.base.updateNames();

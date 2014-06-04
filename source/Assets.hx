@@ -26,6 +26,7 @@ class Assets
 	static public function setBtnGraphic(Btn:FlxUIButton):Void
 	{
 		Btn.loadGraphicSlice9([Assets.BUTTON], 80, 20, []);
+		Btn.resize(80, 20);
 		Btn.label.color = 0xffffffff;
 		Btn.over_color = 0xffffffff;
 		Btn.down_color = 0xffffffff;
